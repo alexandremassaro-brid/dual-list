@@ -34,7 +34,6 @@ export class Modal {
      * @public
      */
     get id() {
-        console.log(this.#htmlElement.id);
         return this.#htmlElement.id;
     }
 
@@ -90,7 +89,7 @@ export class Modal {
     }
 
     /**
-     * Initializes the content of the modal
+     * Initializes the content of the modal.
      * @method
      * @private
      */
@@ -104,8 +103,12 @@ export class Modal {
 
         // Header
         this.#initializeHeader();
+        modalContent.appendChild(this.#headerHtmlElement);
+
         // Body
         // Footer
+
+        this.#contentHtmlElement = modalContent;
     }
 
     /**
