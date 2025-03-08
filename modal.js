@@ -84,8 +84,18 @@ export class Modal {
         modalContent.classList.add(requiredClasses);
 
         // Header
+        this.#initializeHeader();
         // Body
         // Footer
+    }
+
+    /**
+     * Initializes the header of the modal
+     * @method
+     * @private
+     */
+    #initializeHeader() {
+        //
     }
 
     /**
