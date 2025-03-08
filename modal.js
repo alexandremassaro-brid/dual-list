@@ -53,4 +53,13 @@ export class Modal {
 
         // Initialize Content
     }
+
+    /**
+     * Returns an HTMLElement object to be appended to the HTML Document
+     * @returns {HTMLDivElement} The Modal's HTMLElement
+    */
+    render() {
+        // Return the modal's HTMLElement object;
+        return this.#htmlElement;
+    }
 }
