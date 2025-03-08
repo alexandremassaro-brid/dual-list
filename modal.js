@@ -29,6 +29,14 @@ export class Modal {
     #headerHtmlElement;
 
     /**
+     * The Html component used to render the modal's footer.
+     * @private
+     * @constant
+     * @type {HTMLDivElement}
+     */
+    #footerHtmlElement;
+
+    /**
      * Returns the modal id
      * @property {string} - The HTML element id.
      * @public
