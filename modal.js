@@ -67,6 +67,16 @@ export class Modal {
         this.#htmlElement.appendChild(documentDiv);
 
         // Initialize Content
+        this.#initializeContent();
+    }
+
+    /**
+     * Initializes the content of the modal
+     */
+    #initializeContent() {
+        // Header
+        // Body
+        // Footer
     }
 
     /**
