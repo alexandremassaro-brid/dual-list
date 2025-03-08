@@ -95,7 +95,15 @@ export class Modal {
      * @private
      */
     #initializeHeader() {
-        //
+        // Create header div
+        const requiredClasses = [
+            'modal-header',
+        ];
+        const modalHeader = document.createElement('div');
+        modalHeader.classList.add(requiredClasses);
+        
+        // Close button
+        // Modal title
     }
 
     /**
