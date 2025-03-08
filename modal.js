@@ -165,6 +165,17 @@ export class Modal {
     }
 
     /**
+     * Initializes the footer of the modal
+     * @method
+     * @private
+     * @todo Implementar inicialização do rodapé
+     */
+    #initializeFooter() {
+        // Botão cancelar
+        // Botão confirmar
+    }
+
+    /**
      * Returns an HTMLElement object to be appended to the HTML Document
      * @method
      * @public
