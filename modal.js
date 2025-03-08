@@ -117,6 +117,8 @@ export class Modal {
 
         // Body
         // Footer
+        this.#initializeFooter();
+        modalContent.appendChild(this.footerHtmlElement);
 
         this.#contentHtmlElement = modalContent;
     }
