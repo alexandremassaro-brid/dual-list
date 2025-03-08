@@ -136,7 +136,7 @@ export class Modal {
         closeButton.setAttribute('aria-label', 'Close');
         const closeButtonLabel = document.createElement('span');
         closeButtonLabel.setAttribute('aria-hidden', 'true');
-        closeButtonLabel.innerText = '&times;';
+        closeButtonLabel.innerHTML = '&times;';
         closeButton.appendChild(closeButtonLabel);
 
         // Modal title
