@@ -7,6 +7,14 @@ export class Modal {
      * @constructor
      */
     constructor() {
-        // Initialize Element
+        this.#initializeElement();
     }
+
+    /**
+     * Initializes the HTMLElement
+     * @private
+    */
+   #initializeElement(id, label) {
+    // Initialize element
+}
 }
