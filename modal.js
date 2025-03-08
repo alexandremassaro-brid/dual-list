@@ -92,6 +92,8 @@ export class Modal {
      * Initializes the content of the modal.
      * @method
      * @private
+     * @todo Implementar inicialização do corpo do modal
+     * @todo Implementar inicialização do rodapé do modal
      */
     #initializeContent() {
         // Create content div
