@@ -45,14 +45,14 @@ export class Modal {
         const modalId = id;
         const tabIndex = '-1';
         const role = 'dialog';
-        const ariaLabelledBy = 'modalTitleLabel';
+        const ariaLabelledBy = 'modalTitleLabel'; // Must be the same as the header's label's id.
 
-        this.#htmlElement = document.createElement('div');
-        this.#htmlElement.classList.add(requiredClasses);
-        this.#htmlElement.id = modalId;
-        this.#htmlElement.tabIndex = tabIndex;
-        this.#htmlElement.role = role;
-        this.#htmlElement.setAttribute('aria-labbeledby', ariaLabelledBy);
+        const modal = document.createElement('div');
+        modal.classList.add(requiredClasses);
+        modal.id = modalId;
+        modal.tabIndex = tabIndex;
+        modal.role = role;
+        modal.setAttribute('aria-labbeledby', ariaLabelledBy);
 
         // Create document div tag
         const documentRequiredClasses = [
@@ -64,10 +64,13 @@ export class Modal {
         documentDiv.classList.add(documentRequiredClasses);
         documentDiv.role = documentRole;
 
-        this.#htmlElement.appendChild(documentDiv);
+        modal.appendChild(documentDiv);
 
         // Initialize Content
         this.#initializeContent();
+        modal.appendChild(this.#contentHtmlElement);
+
+        this.#htmlElement = modal;
     }
 
     /**
