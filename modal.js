@@ -40,6 +40,17 @@ export class Modal {
         this.#htmlElement.setAttribute('aria-labbeledby', ariaLabelledBy);
 
         // Create document div tag
+        const documentRequiredClasses = [
+            'modal-dialog',
+        ];
+        const documentRole = 'document';
+
+        const documentDiv = new HTMLDivElement();
+        documentDiv.classList.add(documentRequiredClasses);
+        documentDiv.role = documentRole;
+
+        this.#htmlElement.appendChild(documentDiv);
+
         // Initialize Content
     }
 }
