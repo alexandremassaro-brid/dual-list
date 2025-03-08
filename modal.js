@@ -72,8 +72,17 @@ export class Modal {
 
     /**
      * Initializes the content of the modal
+     * @method
+     * @private
      */
     #initializeContent() {
+        // Create content div
+        const requiredClasses = [
+            'modal-content',
+        ];
+        const modalContent = document.createElement('div');
+        modalContent.classList.add(requiredClasses);
+
         // Header
         // Body
         // Footer
