@@ -115,7 +115,7 @@ export class Modal {
      * @private
      * @todo Implement body of the modal
      */
-    #initializeContent() {
+    #initializeContent(headerTitle = 'modalTitleLabel') {
         // Create content div
         const requiredClasses = [
             'modal-content',
@@ -126,7 +126,7 @@ export class Modal {
         }
 
         // Header
-        this.#initializeHeader();
+        this.#initializeHeader('headerId', headerTitle);
         modalContent.appendChild(this.#headerHtmlElement);
 
         // Body
