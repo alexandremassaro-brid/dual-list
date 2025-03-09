@@ -135,6 +135,10 @@ export class Dropdown {
         }
 
         // Append elements to dropdown div
+        formGroup.appendChild(select);
+        dropdown.appendChild(formGroup);        
+
+        this.#htmlElement = dropdown;
     }
 }
 
