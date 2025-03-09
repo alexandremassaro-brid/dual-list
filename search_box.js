@@ -8,6 +8,13 @@
 export class SearchBox {
     // Inicializar elementos
     #htmlElement;
+
+    #textboxHtmlElement;
+
+    get text() {
+        return this.#textboxHtmlElement.value;
+    }
+
     constructor(id = 'SearchBox', placeholder = 'Find ...') {
         // Inicializar elemento
         let requiredClasses = [
