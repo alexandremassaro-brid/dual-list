@@ -7,11 +7,19 @@
  */
 export class SearchBox {
     // Inicializar elementos
-    constructor() {
+    #htmlElement;
         // Inicializar elemento
+        let requiredClasses = [
+            'col-xs-12',
+        ];
+        const searchBox = document.createElement('div');
+        for (const requiredClass of requiredClasses) {
+            searchBox.classList.add(requiredClass);
+        }
+
         // Criar form group
         // Criar input group
         // Criar icone
         // Criar caixa de texto
         // Adicionar elementos ao SearchBox.
-    }
+        this.#htmlElement = searchBox;
