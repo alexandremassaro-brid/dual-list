@@ -26,6 +26,14 @@ export class Dropdown {
      */
     #initializeElement() {
         // Create dropdown div
+        let requiredClasses = [
+            'col-xs-12',
+        ];
+        const dropdown = document.createElement('div');
+        for (const requiredClass of requiredClasses) {
+            dropdown.classList.add(requiredClass);
+        }
+        
         // form-group
         // select form-control
         // select options
