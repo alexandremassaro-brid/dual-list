@@ -31,6 +31,11 @@
         console.log('HTML: ' + modal.id);
         openModalButton.setAttribute('data-target', '#' + modal.id);
 
+        // Abrir modal ao carregar a página
+        $(document).ready(function(){
+            $('#' + modal.id).modal('show');
+        });
+
     </script>
 </body>
 </html>
