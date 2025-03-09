@@ -35,11 +35,29 @@ export class Dropdown {
     #htmlElement;
 
     /**
-     * The id to be atributed to the select html element.
+     * The Html component used to render the select to the screen.
+     * @private
+     * @constant
+     * @type {HTMLSelectElement}
+     */
+    #selectHtmlElement;
+
+    /**
+     * The description of the dropdown.
+     * If the string has length greater then 0, 
+     * then the first option is the text provided but disabled,
+     * so the user can't select it.
      * @private
      * @type {string}
      */
-    #id;
+    #description;
+
+    /**
+     * The list of options of the dropdown.
+     * @private
+     * @type {DropdownOption[]}
+     */
+    #optionsList;
 
     /**
      * Returns the select id - Can be set.
@@ -47,11 +65,55 @@ export class Dropdown {
      * @public
      */
     get id() {
-        return this.#id;
+        return this.#selectHtmlElement.id;
     }
 
     set id(value = 'selectId') {
-        this.#id = value;
+        this.#selectHtmlElement = value;
+    }
+
+    /**
+     * Defines if the dropdown is required.
+     * If true the user has to pick one option.
+     * @property {boolean} - Whether the dropdown is required.
+     * @public
+     */
+    get isRequired() {
+        return this.#selectHtmlElement.required;
+    }
+
+    set isRequired(value = true) {
+        this.#selectHtmlElement.required = value;
+    }
+
+    /**
+     * The description of the dropdown.
+     * If the string has length greater then 0, 
+     * then the first option is the text provided but disabled,
+     * so the user can't select it.
+     * @property {string} - The description of the dropdown.
+     * @public
+     */
+    get description() {
+        return this.#description;
+    }
+
+    set description(value = '') {
+        this.#description = value;
+    }
+
+    /**
+     * The list of options of the dropdown.
+     * Must be a list of DropdownOption objects.
+     * @property {DropdownOption[]} - The list of dropdown options.
+     * @public
+     */
+    get optionsList() {
+        return this.#optionsList;
+    }
+
+    set optionsList(value = []) {
+        this.#optionsList = value;
     }
 
     /**
@@ -70,25 +132,16 @@ export class Dropdown {
 
     /**
      * Class constructor - Returns a Dropdown instance.
+     * @param {string} [id='dropDownElement'] - The unique identifier of the dropdown.
+     * @param {boolean} [isRequired=true] - Defines if it is required to select an option.
+     * @param {string} [description=''] - If provided, the first option will be disabled and show the text provided.
+     * @param {Iterable<DropdownOption>} [optionsList=[]] - Initializes the dropdown with the items provided in the list.
      */
-    constructor() {
+    constructor(id = 'dropDownElement', isRequired = true, description = '', optionsList = []) {
         // Inicializar elemento
-        this.#initializeElement();
-    }
-
-    /**
-     * Initializes the dropdown HTML Element.
-     * @method
-     * @private
-     * @param {string} [id=this.#id] - The id to be atributed to the select element.
-     * @param {boolean} [isRequired=true] - Define if the select is required to be ... well selected.
-     * @param {string} [description='Select an option from the list'] - A description to be displayed with DropDown.
-     * @param {Iterable<DropdownOption>} [optionsList=[]] - A DropdownOption list to be inserted to the select element.
-     * @todo Criar componente select.
-     * @todo Criar e adicionar as opções do select.
-     * @todo Adicionar todos os elementos ao elemento principal.
-     */
-    #initializeElement(id = this.#id, isRequired = true, description = 'Select an option from the list', optionsList = []) {
+        this.#description = description;
+        this.#optionsList = optionsList;
+        
         // Create dropdown div
         let requiredClasses = [
             'col-xs-12',
