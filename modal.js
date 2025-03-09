@@ -104,8 +104,6 @@ export class Modal {
      * Initializes the content of the modal.
      * @method
      * @private
-     * @todo Implementar inicialização do corpo do modal
-     * @todo Implementar inicialização do rodapé do modal
      */
     #initializeContent() {
         // Create content div
@@ -184,11 +182,54 @@ export class Modal {
      * Initializes the footer of the modal
      * @method
      * @private
-     * @todo Implementar inicialização do rodapé
      */
-    #initializeFooter() {
-        // Botão cancelar
-        // Botão confirmar
+    #initializeFooter(
+        cancelButtonLabel = 'Cancelar', 
+        confirmButtonLabel = 'Confirmar', 
+        cancelAction = cancel => console.log('Cancelar'), 
+        confirmAction = confirm => console.log('Confirmar')
+    ) {
+        // Create footer div
+        const footerRequiredClasses = [
+            'modal-footer',
+        ];
+        const footer = document.createElement('div');
+        for (const requiredClass of footerRequiredClasses) {
+            footer.classList.add(requiredClass);
+        }
+
+        // Cancel Button
+        const cancelRequiredClasses = [
+            'btn',
+            'btn-default',
+        ];
+        const cancelButton = document.createElement('button');
+        for (const requiredClass of cancelRequiredClasses) {
+            cancelButton.classList.add(requiredClass);
+        }
+        cancelButton.type = 'button';
+        cancelButton.innerText = cancelButtonLabel.trim().length > 0 ? cancelButtonLabel.trim() : 'Cancelar';
+        cancelButton.setAttribute('data-dismiss', 'modal');
+        cancelButton.onclick = cancelAction;
+
+        // Confirm Button
+        const confirmRequiredClasses = [
+            'btn',
+            'btn-primary',
+        ];
+        const confirmButton = document.createElement('button');
+        for (const requiredClass of confirmRequiredClasses) {
+            confirmButton.classList.add(requiredClass);
+        }
+        confirmButton.type = 'button';
+        confirmButton.innerText = confirmButtonLabel.trim().length > 0 ? confirmButtonLabel.trim() : 'Confirmar';
+        confirmButton.onclick = confirmAction;
+
+        // Append elements to footer
+        footer.appendChild(cancelButton);
+        footer.appendChild(confirmButton);
+
+        this.#footerHtmlElement = footer;
     }
 
     /**
