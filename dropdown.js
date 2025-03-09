@@ -75,11 +75,12 @@ export class Dropdown {
      * @param {string} [id=this.#id] - The id to be atributed to the select element.
      * @param {boolean} [isRequired=true] - Define if the select is required to be ... well selected.
      * @param {string} [description='Select an option from the list'] - A description to be displayed with DropDown.
+     * @param {Iterable<DropdownOption>} [optionsList=[]] - A DropdownOption list to be inserted to the select element.
      * @todo Criar componente select.
      * @todo Criar e adicionar as opções do select.
      * @todo Adicionar todos os elementos ao elemento principal.
      */
-    #initializeElement(id = this.#id, isRequired = true) {
+    #initializeElement(id = this.#id, isRequired = true, description = 'Select an option from the list', optionsList = []) {
         // Create dropdown div
         let requiredClasses = [
             'col-xs-12',
@@ -120,6 +121,19 @@ export class Dropdown {
         }
 
         // select options
+        if (optionsList && typeof optionsList[Symbol.iterator] === 'function'){
+            for (const option in optionsList) {
+                if (!(option instanceof DropdownOption)) {
+                    throw new TypeError('Only DropdownOption instances can be added!');
+                }
+                const currentOption = document.createElement('option');
+                currentOption.value = option.id;
+                currentOption.innerText = option.caption;
+                
+                select.appendChild(currentOption);
+            }
+        }
+
         // Append elements to dropdown div
     }
 }
