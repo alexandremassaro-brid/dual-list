@@ -121,16 +121,18 @@ export class Dropdown {
         select.required = isRequired;
 
         // select description
-        if (description.trim().length > 0) {
+        if (this.#description && this.#description.trim().length > 0) {
             const selectDescription = document.createElement('option');
             selectDescription.value = '';
-            selectDescription.innerText = description;
+            selectDescription.selected = true;
+            selectDescription.disabled = true;
+            selectDescription.innerText = this.#description;
             select.appendChild(selectDescription);
         }
 
         // select options
-        if (optionsList && typeof optionsList[Symbol.iterator] === 'function'){
-            for (const option in optionsList) {
+        if (this.#optionsList && typeof this.optionsList[Symbol.iterator] === 'function'){
+            for (const option in this.#optionsList) {
                 if (!(option instanceof DropdownOption)) {
                     throw new TypeError('Only DropdownOption instances can be added!');
                 }
@@ -144,8 +146,9 @@ export class Dropdown {
 
         // Append elements to dropdown div
         formGroup.appendChild(select);
-        dropdown.appendChild(formGroup);        
+        dropdown.appendChild(formGroup);     
 
+        this.#selectHtmlElement = select;
         this.#htmlElement = dropdown;
     }
 
