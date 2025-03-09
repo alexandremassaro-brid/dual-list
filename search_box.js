@@ -77,3 +77,6 @@ export class SearchBox {
 
         this.#textboxHtmlElement = textBox;
         this.#htmlElement = searchBox;
+    }
+
+    render() {
