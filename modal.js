@@ -191,11 +191,20 @@ export class Modal {
     }
 
     /**
-     * Initializes the body of the modal
-     * @todo Implementar o método initializeBody
+     * Initializes the body of the modal.
+     * @todo Implementar div do corpo.
+     * @todo Criar formulário para os componentes.
+     * @todo Criar dropdown de períodos.
+     * @todo Criar barra de filtro.
+     * @todo Criar lista dupla.
      */
     #initializeBody() {
-        // Create 
+        // Create body div
+        // Create form for the components
+        // Dropdown
+        // SearchBar
+        // DualList
+
     }
 
     /**
