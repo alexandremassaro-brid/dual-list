@@ -38,6 +38,7 @@ export class Dropdown {
      * @private
      * @param {string} [id=this.#id] - The id to be atributed to the select element.
      * @param {boolean} [isRequired=true] - Define if the select is required to be ... well selected.
+     * @param {string} [description='Select an option from the list'] - A description to be displayed with DropDown.
      * @todo Criar componente select.
      * @todo Criar e adicionar as opções do select.
      * @todo Adicionar todos os elementos ao elemento principal.
@@ -73,6 +74,14 @@ export class Dropdown {
         }
         select.id = id;
         select.required = isRequired;
+
+        // select description
+        if (description.trim().length > 0) {
+            const selectDescription = document.createElement('option');
+            selectDescription.value = '';
+            selectDescription.innerText = description;
+            select.appendChild(selectDescription);
+        }
 
         // select options
         // Append elements to dropdown div
