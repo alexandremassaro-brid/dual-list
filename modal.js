@@ -210,6 +210,15 @@ export class Modal {
         }
         body.style.maxHeight = '500px';
         body.style.overflowY = 'auto';
+
+        // Form
+        requiredClasses = [
+            'form-horizontal',
+        ];
+        const form = document.createElement('form');
+        for (const requiredClass of requiredClasses) {
+            body.classList.add(requiredClass);
+        }
     }
 
     /**
