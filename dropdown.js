@@ -27,6 +27,14 @@ class DropdownOption {
  */
 export class Dropdown {
     /**
+     * The Html component used to render the select to the screen.
+     * @private
+     * @constant
+     * @type {HTMLDivElement}
+     */
+    #htmlElement;
+
+    /**
      * The id to be atributed to the select html element.
      * @private
      * @type {string}
