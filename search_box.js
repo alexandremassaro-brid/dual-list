@@ -18,6 +18,15 @@ export class SearchBox {
         }
 
         // Criar form group
+        requiredClasses = [
+            'form-group',
+            'form-group-sm',
+        ];
+        const formGroup = document.createElement('div');
+        for (const requiredClass of requiredClasses) {
+            formGroup.classList.add(requiredClass);
+        }
+
         // Criar input group
         // Criar icone
         // Criar caixa de texto
