@@ -1,4 +1,25 @@
 /**
+ * @class
+ * @description Represents an option in the dropdown list.
+ */
+class DropdownOption {
+    #id;
+    #caption;
+
+    /**
+     * @param {string} id - The option's unique identifier.
+     * @param {string} caption - The text to display.
+     */
+    constructor(id, caption) {
+        this.#id = id;
+        this.#caption = caption;
+    }
+
+    get id() { return this.#id; }
+    get caption() { return this.#caption; }
+}
+
+/**
  * @classdesc A dropdown Bootstratp 3.3.7 compatible component.
  * @class
  * @public
@@ -24,6 +45,21 @@ export class Dropdown {
     set id(value = 'selectId') {
         this.#id = value;
     }
+
+    /**
+     * Returns a DropdownOption object. Consists of an id and caption.
+     * Ex:
+     *     const dropdownOption = dropdown.DropdownOption('optionId', 'optionCaption');
+     *     console.log(dropdownOption.id); // Should print optionId
+     *     console.log(dropdownOption.caption); // Should print optionCaption
+     * @static
+     * @param {string} id - A unique identifier for the dropdown option.
+     * @param {string} caption - A caption to be displayed with the dropdown option.
+     */
+    static dropdownOptionObject(id, caption) {
+        return new DropdownOption(id, caption);
+    }
+
     /**
      * Class constructor - Returns a Dropdown instance.
      */
