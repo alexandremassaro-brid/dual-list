@@ -27,7 +27,7 @@ class DropdownOption {
  */
 export class Dropdown {
     /**
-     * The Html component used to render the select to the screen.
+     * The Html component used to render the dropdown to the screen.
      * @private
      * @constant
      * @type {HTMLDivElement}
@@ -147,6 +147,27 @@ export class Dropdown {
         dropdown.appendChild(formGroup);        
 
         this.#htmlElement = dropdown;
+    }
+
+    /**
+     * Adds a DropdownOption to the Dropdown
+     * @method
+     * @param {DropdownOption} dropdownOption 
+     * @public
+     */
+    addOption(dropdownOption) {
+        if (!(dropdownOption && dropdownOption instanceof DropdownOption)) {
+            throw new TypeError('Only DropdownOption instances can be added!');
+        }
+        
+        this.#optionsList.push(dropdownOption);
+        
+        const option = document.createElement('option');
+        option.value = dropdownOption.id;
+        option.innerText = dropdownOption.caption;
+        
+        this.#selectHtmlElement.appendChild(option);
+        
     }
 
     /**
