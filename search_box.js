@@ -7,4 +7,11 @@
  */
 export class SearchBox {
     // Inicializar elementos
-}
+    constructor() {
+        // Inicializar elemento
+        // Criar form group
+        // Criar input group
+        // Criar icone
+        // Criar caixa de texto
+        // Adicionar elementos ao SearchBox.
+    }
