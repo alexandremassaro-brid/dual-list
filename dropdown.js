@@ -2,6 +2,7 @@
  * @classdesc A dropdown Bootstratp 3.3.7 compatible component.
  * @class
  * @public
+ * @todo Implementar método render.
  */
 export class Dropdown {
     /**
@@ -17,6 +18,11 @@ export class Dropdown {
      * @method
      * @private
      * @todo Implementar o método initializeElement.
+     * @todo Criar div para o dropdown.
+     * @todo Criar grupo para os componentes do formulário.
+     * @todo Criar componente select.
+     * @todo Criar e adicionar as opções do select.
+     * @todo Adicionar todos os elementos ao elemento principal.
      */
     #initializeElement() {
         // Create dropdown div
