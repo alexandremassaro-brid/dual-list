@@ -28,6 +28,15 @@ export class SearchBox {
         }
 
         // Criar input group
+        requiredClasses = [
+            'input-group',
+            'input-group-sm',
+        ];
+        const inputGroup = document.createElement('div');
+        for (const requiredClass of requiredClasses) {
+            inputGroup.classList.add(requiredClass);
+        }
+        
         // Criar icone
         // Criar caixa de texto
         // Adicionar elementos ao SearchBox.
