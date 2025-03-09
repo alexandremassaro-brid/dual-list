@@ -38,6 +38,22 @@ export class SearchBox {
         }
         
         // Criar icone
+        requiredClasses = [
+            'input-group-addon',
+        ];
+        const icon = document.createElement('span');
+        for (const requiredClass of requiredClasses) {
+            icon.classList.add(requiredClass);
+        }
+        requiredClasses = [
+            'glyphicon',
+            'glyphicon-search',
+        ];
+        const iconSymbol = document.createElement('i');
+        for (const requiredClass of requiredClasses) {
+            iconSymbol.classList.add(requiredClass);
+        }
+
         // Criar caixa de texto
         // Adicionar elementos ao SearchBox.
         this.#htmlElement = searchBox;
