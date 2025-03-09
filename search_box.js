@@ -55,5 +55,17 @@ export class SearchBox {
         }
 
         // Criar caixa de texto
+        requiredClasses = [
+            'form-control',
+            'input-sm',
+        ];
+        const textBox = document.createElement('input');
+        textBox.type = 'text';
+        for (const requiredClass of requiredClasses) {
+            textBox.classList.add(requiredClass);
+        }
+        textBox.id = id;
+        textBox.placeholder = placeholder;
+
         // Adicionar elementos ao SearchBox.
         this.#htmlElement = searchBox;
