@@ -219,6 +219,10 @@ export class Modal {
         for (const requiredClass of requiredClasses) {
             body.classList.add(requiredClass);
         }
+
+        // Dropdown
+        const dropDown = new Dropdown();
+        dropDown.addOption(Dropdown.dropdownOptionObject('Option1', 'Option1'));
     }
 
     /**
