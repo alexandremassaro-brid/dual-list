@@ -35,6 +35,15 @@ export class Dropdown {
         }
         
         // form-group
+        requiredClasses = [
+            'form-group',
+            'form-group-sm',
+        ];
+        const formGroup = document.createElement('div');
+        for (const requiredClass of requiredClasses) {
+            formGroup.classList.add(requiredClass);
+        }
+
         // select form-control
         // select options
         // Append elements to dropdown div
