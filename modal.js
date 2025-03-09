@@ -308,34 +308,3 @@ export class Modal {
         return this.#htmlElement;
     }
 }
-
-
-// <!-- Modal -->
-// <div class="modal fade" id="congelamentoModal" tabindex="-1" role="dialog" aria-labelledby="congelamentoModalLabel">
-//     <div class="modal-dialog" role="document">
-//         <div class="modal-content">
-//             <div class="modal-header">
-//                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-//                     <span aria-hidden="true">&times;</span>
-//                 </button>
-//                 <h4 class="modal-title" id="congelamentoModalLabel">Novo Congelamento</h4>
-//             </div>
-//             <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
-//                 <form class="form-horizontal">
-//
-//                     <!-- Dropdown de períodos -->
-//                     
-//                     <!-- Barra de pesquisa -->
-//                     
-//                     <!-- Listas -->
-//
-//                 </form>
-//             </div>
-//             
-//             <div class="modal-footer">
-//                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-//                 <button type="button" class="btn btn-primary" onclick="console.log('Confirmar')">Confirmar</button>
-//             </div>
-//         </div>
-//     </div>
-// </div>
