@@ -8,6 +8,7 @@
 export class SearchBox {
     // Inicializar elementos
     #htmlElement;
+    constructor(id = 'SearchBox', placeholder = 'Find ...') {
         // Inicializar elemento
         let requiredClasses = [
             'col-xs-12',
@@ -68,4 +69,11 @@ export class SearchBox {
         textBox.placeholder = placeholder;
 
         // Adicionar elementos ao SearchBox.
+        icon.appendChild(iconSymbol);
+        inputGroup.appendChild(icon);
+        inputGroup.appendChild(textBox);
+        formGroup.appendChild(inputGroup);
+        searchBox.appendChild(formGroup);
+
+        this.#textboxHtmlElement = textBox;
         this.#htmlElement = searchBox;
