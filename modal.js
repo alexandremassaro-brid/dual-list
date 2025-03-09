@@ -1,3 +1,4 @@
+import { Dropdown } from './dropdown.js';
 /**
  * @classdesc A dialog modal that opens over the web page.
  * @class
