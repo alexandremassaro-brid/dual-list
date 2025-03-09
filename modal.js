@@ -232,10 +232,12 @@ export class Modal {
         const searchBox = new SearchBox();
         
         // DualList
+        const dualList = new DualList();
         
         // Append elements to body
         form.appendChild(dropDown.render());
         form.appendChild(searchBox.render());
+        form.appendChild(dualList.render());
         body.appendChild(form);
 
         this.#bodyHtmlElement = body;
