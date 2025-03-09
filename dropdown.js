@@ -148,5 +148,14 @@ export class Dropdown {
 
         this.#htmlElement = dropdown;
     }
-}
 
+    /**
+     * Returns an HTMLElement object with the dropdown to be added to the page.
+     * @method
+     * @public
+     * @returns {HTMLDivElement} - A HTMLElement object with the dropdown to be added to the page.
+     */
+    render() {
+        return this.#htmlElement;
+    }
+}
