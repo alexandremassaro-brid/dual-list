@@ -7,14 +7,37 @@
  */
 export class SearchBox {
     // Inicializar elementos
+    /**
+     * The Html component used to render the SearchBox to the screen.
+     * @private
+     * @constant
+     * @type {HTMLDivElement}
+     */
     #htmlElement;
 
+    /**
+     * The Html component used to render the textbox to the screen.
+     * @private
+     * @constant
+     * @type {HTMLInputElement}
+     */
     #textboxHtmlElement;
 
+    /**
+     * Return the value typed in the textbox.
+     * @property {string} - The list of dropdown options.
+     * @public
+     */
     get text() {
         return this.#textboxHtmlElement.value;
     }
 
+    /**
+     * SearchBox class constructor.
+     * Returns an instance of a SearchBox.
+     * @param {string} id - The unique identificator of the SearchBox.
+     * @param {string} placeholder - The placeholder text to be displayed at the text box.
+     */
     constructor(id = 'SearchBox', placeholder = 'Find ...') {
         // Inicializar elemento
         let requiredClasses = [
@@ -86,6 +109,10 @@ export class SearchBox {
         this.#htmlElement = searchBox;
     }
 
+    /**
+     * Returns a HTMLElement to be added to the webpage.
+     * @returns - The SearchBox HTMLElement.
+     */
     render() {
         return this.#htmlElement;
     }
