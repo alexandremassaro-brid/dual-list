@@ -201,7 +201,7 @@ export class Modal {
      */
     #initializeBody() {
         // Create body div
-        const requiredClasses = [
+        let requiredClasses = [
             'modal-body',
         ];
         const body = document.createElement('div');
@@ -221,7 +221,7 @@ export class Modal {
         }
 
         // Dropdown
-        const dropDown = new Dropdown();
+        const dropDown = new Dropdown('dropDownObject', true, 'dropDownObject', []);
         dropDown.addOption(Dropdown.dropdownOptionObject('Option1', 'Option1'));
         
         // SearchBar
