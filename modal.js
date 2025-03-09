@@ -200,11 +200,15 @@ export class Modal {
      */
     #initializeBody() {
         // Create body div
-        // Create form for the components
-        // Dropdown
-        // SearchBar
-        // DualList
-
+        const requiredClasses = [
+            'modal-body',
+        ];
+        const body = document.createElement('div');
+        for (const requiredClass of requiredClasses) {
+            body.classList.add(requiredClass);
+        }
+        body.style.maxHeight = '500px';
+        body.style.overflowY = 'auto';
     }
 
     /**
