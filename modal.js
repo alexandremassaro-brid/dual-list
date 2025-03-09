@@ -29,6 +29,14 @@ export class Modal {
     #headerHtmlElement;
 
     /**
+     * The Html component used to render the modal's body.
+     * @private
+     * @constant
+     * @type {HTMLDivElement}
+     */
+    #bodyHtmlElement;
+
+    /**
      * The Html component used to render the modal's footer.
      * @private
      * @constant
@@ -121,7 +129,9 @@ export class Modal {
         modalContent.appendChild(this.#headerHtmlElement);
 
         // Body
-        
+        this.#initializeBody();
+        modalContent.appendChild(this.#bodyHtmlElement);
+
         // Footer
         this.#initializeFooter();
         modalContent.appendChild(this.#footerHtmlElement);
@@ -178,6 +188,14 @@ export class Modal {
         modalHeader.appendChild(h4Title);
 
         this.#headerHtmlElement = modalHeader;
+    }
+
+    /**
+     * Initializes the body of the modal
+     * @todo Implementar o método initializeBody
+     */
+    #initializeBody() {
+        // Create 
     }
 
     /**
