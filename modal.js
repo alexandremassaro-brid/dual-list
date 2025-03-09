@@ -223,6 +223,16 @@ export class Modal {
         // Dropdown
         const dropDown = new Dropdown();
         dropDown.addOption(Dropdown.dropdownOptionObject('Option1', 'Option1'));
+        
+        // SearchBar
+        
+        // DualList
+        
+        // Append elements to body
+        form.appendChild(dropDown.render());
+        body.appendChild(form);
+
+        this.#bodyHtmlElement = body;
     }
 
     /**
