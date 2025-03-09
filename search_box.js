@@ -80,5 +80,6 @@ export class SearchBox {
     }
 
     render() {
+        return this.#htmlElement;
     }
 }
