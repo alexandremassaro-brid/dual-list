@@ -104,6 +104,7 @@ export class Modal {
      * Initializes the content of the modal.
      * @method
      * @private
+     * @todo Implement body of the modal
      */
     #initializeContent() {
         // Create content div
@@ -120,6 +121,7 @@ export class Modal {
         modalContent.appendChild(this.#headerHtmlElement);
 
         // Body
+        
         // Footer
         this.#initializeFooter();
         modalContent.appendChild(this.#footerHtmlElement);
