@@ -229,11 +229,13 @@ export class Modal {
         dropDown.addOption(Dropdown.dropdownOptionObject('Option2', 'Option2'));
         
         // SearchBar
+        const searchBox = new SearchBox();
         
         // DualList
         
         // Append elements to body
         form.appendChild(dropDown.render());
+        form.appendChild(searchBox.render());
         body.appendChild(form);
 
         this.#bodyHtmlElement = body;
