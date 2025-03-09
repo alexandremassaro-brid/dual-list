@@ -71,7 +71,9 @@ export class Modal {
         const ariaLabelledBy = 'modalTitleLabel'; // Must be the same as the header's label's id.
 
         const modal = document.createElement('div');
-        modal.classList.add(requiredClasses);
+        for (const requiredClass of requiredClasses) {
+            modal.classList.add(requiredClass);
+        }
         modal.id = modalId;
         modal.tabIndex = tabIndex;
         modal.role = role;
@@ -84,15 +86,17 @@ export class Modal {
         const documentRole = 'document';
 
         const documentDiv = document.createElement('div');
-        documentDiv.classList.add(documentRequiredClasses);
+        for (const requiredClass of documentRequiredClasses) {
+            documentDiv.classList.add(requiredClass);
+        }
         documentDiv.role = documentRole;
-
-        modal.appendChild(documentDiv);
-
+        
         // Initialize Content
         this.#initializeContent();
-        modal.appendChild(this.#contentHtmlElement);
-
+        documentDiv.appendChild(this.#contentHtmlElement);
+        
+        modal.appendChild(documentDiv);
+        
         this.#htmlElement = modal;
     }
 
@@ -109,7 +113,9 @@ export class Modal {
             'modal-content',
         ];
         const modalContent = document.createElement('div');
-        modalContent.classList.add(requiredClasses);
+        for (const requiredClass of requiredClasses) {
+            modalContent.classList.add(requiredClass);
+        }
 
         // Header
         this.#initializeHeader();
@@ -118,7 +124,7 @@ export class Modal {
         // Body
         // Footer
         this.#initializeFooter();
-        modalContent.appendChild(this.footerHtmlElement);
+        modalContent.appendChild(this.#footerHtmlElement);
 
         this.#contentHtmlElement = modalContent;
     }
@@ -136,18 +142,23 @@ export class Modal {
             'modal-header',
         ];
         const modalHeader = document.createElement('div');
-        modalHeader.classList.add(requiredClasses);
+        for (const requiredClass of requiredClasses) {
+            modalHeader.classList.add(requiredClass);
+        }
 
         // Close button
         const closeButtonRequiredClasses = [
             'close',
         ];
         const closeButton = document.createElement('button');
-        closeButton.classList.add(closeButtonRequiredClasses);
+        for (const requiredClass of closeButtonRequiredClasses) {
+            closeButton.classList.add(requiredClass);
+        }
+        closeButton.type = 'button';
+        closeButton.ariaLabel = 'Close';
         closeButton.setAttribute('data-dismiss', 'modal');
-        closeButton.setAttribute('aria-label', 'Close');
         const closeButtonLabel = document.createElement('span');
-        closeButtonLabel.setAttribute('aria-hidden', 'true');
+        closeButtonLabel.ariaHidden = 'true';
         closeButtonLabel.innerHTML = '&times;';
         closeButton.appendChild(closeButtonLabel);
 
@@ -156,6 +167,9 @@ export class Modal {
             'modal-title',
         ];
         const h4Title = document.createElement('h4');
+        for (const requiredClass of titleRequiredClasses) {
+            h4Title.classList.add(requiredClass);
+        }
         h4Title.id = labelId.trim().length > 0 ? labelId.trim() : 'modalTitleLabel';
         h4Title.innerText = labelText.trim().length > 0 ? labelText.trim() : 'Dialog Modal';
 
