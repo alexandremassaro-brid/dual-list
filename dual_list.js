@@ -50,6 +50,7 @@ export class DualList {
 
     render() {
         // Implementar método render.
+        return this.#htmlElement;
     }
     
 }
