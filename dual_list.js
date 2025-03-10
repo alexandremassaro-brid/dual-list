@@ -40,6 +40,14 @@ export class DualList {
 
     #initializeActionButtons() {
         // Action buttons
+        let requiredClasses = [
+            'col-xs-2',
+            'text-center',
+        ];
+        const actionButtons = document.createElement('div');
+        for (const requiredClass of requiredClasses) {
+            actionButtons.classList.add(requiredClass);
+        }
     #initializeDestinationList() {
         const list = new List('destinationList', 'Destination List');
 
