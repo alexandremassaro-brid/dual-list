@@ -79,7 +79,32 @@ export class DualList {
             allToDestinationIcon.classList.add(requiredClass);
         }
         allToDestinationIcon.ariaHidden = 'true';
+
+        requiredClasses = [
+            'btn',
+            'btn-default',
+        ];
+        const selectedToDestinationButton = document.createElement('button');
+        for (const requiredClass of requiredClasses) {
+            selectedToDestinationButton.classList.add(requiredClass);
+        }
+        selectedToDestinationButton.onclick = () => {
+            console.log('Move selected to destination');
+        };
+
+        requiredClasses = [
+            'glyphicon',
+            'glyphicon-forward',
+        ];
+        const selectedToDestinationIcon = document.createElement('span');
+        for (const requiredClass of requiredClasses) {
+            selectedToDestinationIcon.classList.add(requiredClass);
+        }
+        selectedToDestinationIcon.ariaHidden = 'true';
         allToDestinationButton.appendChild(allToDestinationIcon);
+        selectedToDestinationButton.appendChild(selectedToDestinationIcon);
+        buttonGroup.appendChild(allToDestinationButton);
+        buttonGroup.appendChild(selectedToDestinationButton);
         buttonGroup.appendChild(allToDestinationButton);
         actionButtons.appendChild(buttonGroup);
 
