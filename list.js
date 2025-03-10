@@ -111,15 +111,3 @@ export class List {
         return this.#htmlElement;
     }
 }
-
-//     <div class="col-xs-5">
-//         <div class="panel panel-default">
-//             <div class="panel-heading">
-//                 <h3 class="panel-title">Itens Disponíveis</h3>
-//             </div>
-//             <ul class="list-group" id="listaDisponivel">
-//                 <!-- Itens serão inseridos aqui via JavaScript -->
-//             </ul>
-//             <div id="paginacaoDisponiveis" class="panel-footer"></div>
-//         </div>
-//     </div>
