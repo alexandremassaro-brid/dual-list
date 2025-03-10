@@ -48,6 +48,20 @@ export class DualList {
         for (const requiredClass of requiredClasses) {
             actionButtons.classList.add(requiredClass);
         }
+
+        requiredClasses = [
+            'btn-group-vertical',
+            'btn-group-sm',
+        ];
+        const buttonGroup = document.createElement('div');
+        for (const requiredClass of requiredClasses) {
+            buttonGroup.classList.add(requiredClass);
+        }
+        actionButtons.appendChild(buttonGroup);
+
+        this.#actionButtons = actionButtons;
+    }
+
     #initializeDestinationList() {
         const list = new List('destinationList', 'Destination List');
 
