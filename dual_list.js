@@ -21,12 +21,16 @@ export class DualList {
         this.#initializeSourceList();
 
         // Action Button
+        this.#initializeActionButtons();
+
         // Destination List
         this.#initializeDestinationList();
 
         // Append elements to the DualList
         dualList.appendChild(this.#sourceListHtmlElement);
+        dualList.appendChild(this.#actionButtons);
         dualList.appendChild(this.#destinationListHtmlElement);
+
         this.#htmlElement = dualList;
     }
 
@@ -123,12 +127,37 @@ export class DualList {
             selectedToOriginIcon.classList.add(requiredClass);
         }
         selectedToOriginIcon.ariaHidden = 'true';
+
+        requiredClasses = [
+            'btn',
+            'btn-default',
+        ];
+        const allToOriginButton = document.createElement('button');
+        for (const requiredClass of requiredClasses) {
+            allToOriginButton.classList.add(requiredClass);
+        }
+        allToOriginButton.onclick = () => {
+            console.log('Move all to origin');
+        };
+
+        requiredClasses = [
+            'glyphicon',
+            'glyphicon-fast-backward',
+        ];
+        const allToOriginIcon = document.createElement('span');
+        for (const requiredClass of requiredClasses) {
+            allToOriginIcon.classList.add(requiredClass);
+        }
+        allToOriginIcon.ariaHidden = 'true';
+
         allToDestinationButton.appendChild(allToDestinationIcon);
         selectedToDestinationButton.appendChild(selectedToDestinationIcon);
         selectedToOriginButton.appendChild(selectedToOriginIcon);
+        allToOriginButton.appendChild(allToOriginIcon);
         buttonGroup.appendChild(allToDestinationButton);
         buttonGroup.appendChild(selectedToDestinationButton);
         buttonGroup.appendChild(selectedToOriginButton);
+        buttonGroup.appendChild(allToOriginButton);
         actionButtons.appendChild(buttonGroup);
 
         this.#actionButtons = actionButtons;
