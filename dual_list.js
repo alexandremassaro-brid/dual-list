@@ -1,4 +1,9 @@
 export class DualList {
+    #htmlElement;
+    #sourceListHtmlElement;
+    #actionButtons;
+    #destinationListHtmlElement;
+
     constructor() {
         // Implementar inicializações dos elementos.
         // Dual list Row div
@@ -14,6 +19,7 @@ export class DualList {
         // Action Button
         // Destination List
         // Append elements to the DualList
+        this.#htmlElement = dualList;
     }
 
     #initializeSourceList() {
