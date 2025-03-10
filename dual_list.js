@@ -16,13 +16,21 @@ export class DualList {
         }
 
         // Source list
+        this.#initializeSourceList();
+
         // Action Button
         // Destination List
         // Append elements to the DualList
+        dualList.appendChild(this.#sourceListHtmlElement);
         this.#htmlElement = dualList;
     }
 
     #initializeSourceList() {
+        const list = new List('sourceList', 'Source List');
+
+        list.addItem('item1', 'Item 1');
+
+        this.#sourceListHtmlElement = list.render();
     }
 
     #initializeActionButtons() {
