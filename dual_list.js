@@ -1,3 +1,5 @@
+import { List } from './list.js';
+
 export class DualList {
     #htmlElement;
     #sourceListHtmlElement;
