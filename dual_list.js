@@ -22,8 +22,11 @@ export class DualList {
 
         // Action Button
         // Destination List
+        this.#initializeDestinationList();
+
         // Append elements to the DualList
         dualList.appendChild(this.#sourceListHtmlElement);
+        dualList.appendChild(this.#destinationListHtmlElement);
         this.#htmlElement = dualList;
     }
 
@@ -38,6 +41,11 @@ export class DualList {
     #initializeActionButtons() {
         // Action buttons
     #initializeDestinationList() {
+        const list = new List('destinationList', 'Destination List');
+
+        list.addItem('item2', 'Item 2');
+
+        this.#destinationListHtmlElement = list.render();
     }
 
     render() {
