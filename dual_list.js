@@ -57,6 +57,30 @@ export class DualList {
         for (const requiredClass of requiredClasses) {
             buttonGroup.classList.add(requiredClass);
         }
+
+        requiredClasses = [
+            'btn',
+            'btn-default',
+        ];
+        const allToDestinationButton = document.createElement('button');
+        for (const requiredClass of requiredClasses) {
+            allToDestinationButton.classList.add(requiredClass);
+        }
+        allToDestinationButton.onclick = () => {
+            console.log('Move all to destination');
+        };
+
+        requiredClasses = [
+            'glyphicon',
+            'glyphicon-fast-forward',
+        ];
+        const allToDestinationIcon = document.createElement('span');
+        for (const requiredClass of requiredClasses) {
+            allToDestinationIcon.classList.add(requiredClass);
+        }
+        allToDestinationIcon.ariaHidden = 'true';
+        allToDestinationButton.appendChild(allToDestinationIcon);
+        buttonGroup.appendChild(allToDestinationButton);
         actionButtons.appendChild(buttonGroup);
 
         this.#actionButtons = actionButtons;
