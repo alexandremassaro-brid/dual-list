@@ -30,6 +30,10 @@
         
         openModalButton.setAttribute('data-target', '#' + modal.id);
 
+        $(document).ready(function(){
+            $('#' + modal.id).modal('show');
+        });
+
     </script>
 </body>
 </html>
