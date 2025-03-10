@@ -101,11 +101,34 @@ export class DualList {
             selectedToDestinationIcon.classList.add(requiredClass);
         }
         selectedToDestinationIcon.ariaHidden = 'true';
+
+        requiredClasses = [
+            'btn',
+            'btn-default',
+        ];
+        const selectedToOriginButton = document.createElement('button');
+        for (const requiredClass of requiredClasses) {
+            selectedToOriginButton.classList.add(requiredClass);
+        }
+        selectedToOriginButton.onclick = () => {
+            console.log('Move selected to origin');
+        };
+
+        requiredClasses = [
+            'glyphicon',
+            'glyphicon-backward',
+        ];
+        const selectedToOriginIcon = document.createElement('span');
+        for (const requiredClass of requiredClasses) {
+            selectedToOriginIcon.classList.add(requiredClass);
+        }
+        selectedToOriginIcon.ariaHidden = 'true';
         allToDestinationButton.appendChild(allToDestinationIcon);
         selectedToDestinationButton.appendChild(selectedToDestinationIcon);
+        selectedToOriginButton.appendChild(selectedToOriginIcon);
         buttonGroup.appendChild(allToDestinationButton);
         buttonGroup.appendChild(selectedToDestinationButton);
-        buttonGroup.appendChild(allToDestinationButton);
+        buttonGroup.appendChild(selectedToOriginButton);
         actionButtons.appendChild(buttonGroup);
 
         this.#actionButtons = actionButtons;
