@@ -49,6 +49,27 @@ export class Modal {
     #footerHtmlElement;
 
     /**
+     * The dropdown component.
+     * @private
+     * @type {Dropdown}
+     */
+    #dropdown;
+
+    /**
+     * The search box component.
+     * @private
+     * @type {SearchBox}
+     */
+    #searchBox;
+
+    /**
+     * The dual list component.
+     * @private
+     * @type {DualList}
+     */
+    #dualList;
+
+    /**
      * Returns the modal id
      * @property {string} - The HTML element id.
      * @public
@@ -58,9 +79,154 @@ export class Modal {
     }
 
     /**
+     * Sets the modal id
+     * @property {string} - The HTML element id.
+     * @public
+     */
+    set id(value) {
+        this.#htmlElement.id = value;
+    }
+
+    /**
+     * Returns the modal title
+     * @property {string} - The modal title.
+     * @public
+     */
+    get title() {
+        return this.#headerHtmlElement.querySelector('.modal-title').textContent;
+    }
+
+    /**
+     * Sets the modal title
+     * @property {string} - The modal title.
+     * @public
+     */
+    set title(value) {
+        this.#headerHtmlElement.querySelector('.modal-title').textContent = value;
+    }
+
+    /**
+     * Returns the dropdown description
+     * @property {string} - The dropdown description.
+     * @public
+     */
+    get dropdownDescription() {
+        return this.#dropdown.description;
+    }
+
+    /**
+     * Sets the dropdown description
+     * @property {string} - The dropdown description.
+     * @public
+     */
+    set dropdownDescription(value) {
+        this.#dropdown.description = value;
+    }
+
+    /**
+     * Returns the search box placeholder
+     * @property {string} - The search box placeholder.
+     * @public
+     */
+    get searchPlaceholder() {
+        return this.#searchBox.placeholder;
+    }
+
+    /**
+     * Sets the search box placeholder
+     * @property {string} - The search box placeholder.
+     * @public
+     */
+    set searchPlaceholder(value) {
+        this.#searchBox.placeholder = value;
+    }
+
+    /**
+     * Returns the source list title
+     * @property {string} - The source list title.
+     * @public
+     */
+    get sourceListTitle() {
+        return this.#dualList.sourceListTitle;
+    }
+
+    /**
+     * Sets the source list title
+     * @property {string} - The source list title.
+     * @public
+     */
+    set sourceListTitle(value) {
+        this.#dualList.sourceListTitle = value;
+    }
+
+    /**
+     * Returns the target list title
+     * @property {string} - The target list title.
+     * @public
+     */
+    get targetListTitle() {
+        return this.#dualList.targetListTitle;
+    }
+
+    /**
+     * Sets the target list title
+     * @property {string} - The target list title.
+     * @public
+     */
+    set targetListTitle(value) {
+        this.#dualList.targetListTitle = value;
+    }
+
+    /**
+     * Returns the items per page
+     * @property {number} - The number of items per page.
+     * @public
+     */
+    get itemsPerPage() {
+        return this.#dualList.itemsPerPage;
+    }
+
+    /**
+     * Sets the items per page
+     * @property {number} - The number of items per page.
+     * @public
+     */
+    set itemsPerPage(value) {
+        this.#dualList.itemsPerPage = value;
+    }
+
+    /**
+     * Sets the source items
+     * @property {Array} - The source items array.
+     * @public
+     */
+    set sourceItems(value) {
+        this.#dualList.sourceItems = value;
+    }
+
+    /**
+     * Sets the target items
+     * @property {Array} - The target items array.
+     * @public
+     */
+    set targetItems(value) {
+        this.#dualList.targetItems = value;
+    }
+
+    /**
+     * Sets the on transfer callback
+     * @property {Function} - The callback function.
+     * @public
+     */
+    set onTransfer(value) {
+        this.#dualList.onTransfer = value;
+    }
+
+    /**
      * Class constructor - Returns a Modal instance.
      */
     constructor() {
+        this.#initializeComponents();
         this.#initializeElement();
     }
 
@@ -80,7 +246,7 @@ export class Modal {
         const modalId = id;
         const tabIndex = '-1';
         const role = 'dialog';
-        const ariaLabelledBy = 'modalTitleLabel'; // Must be the same as the header's label's id.
+        const ariaLabelledBy = 'modalTitleLabel';
 
         const modal = document.createElement('div');
         for (const requiredClass of requiredClasses) {
@@ -116,7 +282,6 @@ export class Modal {
      * Initializes the content of the modal.
      * @method
      * @private
-     * @todo Implement body of the modal
      */
     #initializeContent(headerTitle = 'modalTitleLabel') {
         // Create content div
@@ -195,12 +360,23 @@ export class Modal {
     }
 
     /**
+     * Initializes the components of the modal.
+     * @private
+     */
+    #initializeComponents() {
+        // Initialize dropdown
+        this.#dropdown = new Dropdown('dropDownObject', true, 'Selecione uma opção', []);
+
+        // Initialize search box
+        this.#searchBox = new SearchBox('SearchBox', 'Buscar...');
+
+        // Initialize dual list
+        this.#dualList = new DualList('dualList', [], [], 5);
+    }
+
+    /**
      * Initializes the body of the modal.
-     * @todo Implementar div do corpo.
-     * @todo Criar formulário para os componentes.
-     * @todo Criar dropdown de períodos.
-     * @todo Criar barra de filtro.
-     * @todo Criar lista dupla.
+     * @private
      */
     #initializeBody() {
         // Create body div
@@ -220,26 +396,15 @@ export class Modal {
         ];
         const form = document.createElement('form');
         for (const requiredClass of requiredClasses) {
-            body.classList.add(requiredClass);
+            form.classList.add(requiredClass);
         }
 
-        // Dropdown
-        const dropDown = new Dropdown('dropDownObject', true, 'dropDownObject', []);
-        dropDown.addOption(Dropdown.dropdownOptionObject('Option1', 'Option1'));
-        dropDown.addOption(Dropdown.dropdownOptionObject('Option2', 'Option2'));
+        // Append components to form
+        form.appendChild(this.#dropdown.render());
+        form.appendChild(this.#searchBox.render());
+        form.appendChild(this.#dualList.render());
 
-        // SearchBar
-        const searchBox = new SearchBox();
-
-        // DualList
-        const dualList = new DualList();
-
-        // Append elements to body
-        form.appendChild(dropDown.render());
-        form.appendChild(searchBox.render());
-        form.appendChild(dualList.render());
         body.appendChild(form);
-
         this.#bodyHtmlElement = body;
     }
 
@@ -304,7 +469,6 @@ export class Modal {
      * @returns {HTMLDivElement} The Modal's HTMLElement
     */
     render() {
-        // Return the modal's HTMLElement object;
         return this.#htmlElement;
     }
 }
