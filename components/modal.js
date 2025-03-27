@@ -178,7 +178,7 @@ export class Modal {
         // Initialize dropdown
         this.#dropdown = new Dropdown(
             'dropDownObject',
-            true,
+            false,
             options.dropdownDescription || 'Selecione uma opção',
             options.dropdownOptions || []
         );
