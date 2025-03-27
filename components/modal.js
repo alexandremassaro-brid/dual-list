@@ -49,21 +49,21 @@ export class Modal {
     #footerHtmlElement;
 
     /**
-     * The dropdown component.
+     * The dropdown component for context selection.
      * @private
      * @type {Dropdown}
      */
     #dropdown;
 
     /**
-     * The search box component.
+     * The search box component for filtering items.
      * @private
      * @type {SearchBox}
      */
     #searchBox;
 
     /**
-     * The dual list component.
+     * The dual list component for item transfer.
      * @private
      * @type {DualList}
      */
@@ -79,155 +79,126 @@ export class Modal {
     }
 
     /**
-     * Sets the modal id
-     * @property {string} - The HTML element id.
-     * @public
+     * Creates a new Modal instance.
+     * @constructor
+     * @param {Object} options - Configuration options for the modal
+     * @param {string} [options.id='dialogModal'] - The unique identifier for the modal
+     * @param {string} [options.title='Dialog Modal'] - The text to display in the modal's title
+     * @param {string} [options.dropdownDescription='Selecione uma opção'] - The dropdown's description text
+     * @param {Array} [options.dropdownOptions=[]] - The dropdown's options array
+     * @param {string} [options.searchPlaceholder='Buscar...'] - The search box's placeholder text
+     * @param {string} [options.sourceListTitle='Source List'] - The source list's title text
+     * @param {string} [options.targetListTitle='Target List'] - The target list's title text
+     * @param {Array} [options.sourceItems=[]] - Initial items for the source list
+     * @param {Array} [options.targetItems=[]] - Initial items for the target list
+     * @param {number} [options.itemsPerPage=5] - Number of items per page
+     * @param {string} [options.cancelButtonLabel='Cancelar'] - Text for the cancel button
+     * @param {string} [options.confirmButtonLabel='Confirmar'] - Text for the confirm button
+     * @param {Function} [options.onCancel=() => console.log('Cancelar')] - Callback for cancel button click
+     * @param {Function} [options.onConfirm=() => console.log('Confirmar')] - Callback for confirm button click
+     * @param {Function} [options.onTransfer=null] - Callback when items are transferred
+     * @example
+     * // Basic usage
+     * const modal = new Modal();
+     *
+     * // Full customization
+     * const modal = new Modal({
+     *   id: 'customModal',
+     *   title: 'Select Items',
+     *   dropdownDescription: 'Choose a context',
+     *   dropdownOptions: [
+     *     Dropdown.dropdownOptionObject('context1', 'Context 1'),
+     *     Dropdown.dropdownOptionObject('context2', 'Context 2')
+     *   ],
+     *   searchPlaceholder: 'Search items...',
+     *   sourceListTitle: 'Available Items',
+     *   targetListTitle: 'Selected Items',
+     *   sourceItems: [
+     *     { id: '1', caption: 'Item 1' },
+     *     { id: '2', caption: 'Item 2' }
+     *   ],
+     *   targetItems: [
+     *     { id: '3', caption: 'Item 3' }
+     *   ],
+     *   itemsPerPage: 10,
+     *   cancelButtonLabel: 'Cancel',
+     *   confirmButtonLabel: 'Save',
+     *   onCancel: () => console.log('Cancelled'),
+     *   onConfirm: (selectedItems, selectedContext) => {
+     *     console.log('Selected:', selectedItems);
+     *     console.log('Context:', selectedContext);
+     *   },
+     *   onTransfer: (type) => {
+     *     console.log('Transfer type:', type);
+     *   }
+     * });
      */
-    set id(value) {
-        this.#htmlElement.id = value;
+    constructor(options = {}) {
+        // Initialize components with default values
+        this.#initializeComponents(options);
+
+        // Initialize footer with options
+        this.#initializeFooter(
+            options.cancelButtonLabel || 'Cancelar',
+            options.confirmButtonLabel || 'Confirmar',
+            options.onCancel || (() => console.log('Cancelar')),
+            options.onConfirm || (() => console.log('Confirmar'))
+        );
+
+        // Initialize modal element with options
+        this.#initializeElement(
+            options.id || 'dialogModal',
+            options.title || 'Dialog Modal'
+        );
+
+        // Set additional customizations
+        if (options.dropdownDescription) {
+            this.dropdownDescription = options.dropdownDescription;
+        }
+        if (options.searchPlaceholder) {
+            this.searchPlaceholder = options.searchPlaceholder;
+        }
+        if (options.sourceListTitle) {
+            this.sourceListTitle = options.sourceListTitle;
+        }
+        if (options.targetListTitle) {
+            this.targetListTitle = options.targetListTitle;
+        }
+        if (options.onTransfer) {
+            this.onTransfer = options.onTransfer;
+        }
     }
 
     /**
-     * Returns the modal title
-     * @property {string} - The modal title.
-     * @public
+     * Initializes the modal's components.
+     * @private
+     * @param {Object} options - Configuration options for the components
      */
-    get title() {
-        return this.#headerHtmlElement.querySelector('.modal-title').textContent;
-    }
+    #initializeComponents(options) {
+        // Initialize dropdown
+        this.#dropdown = new Dropdown(
+            'dropDownObject',
+            true,
+            options.dropdownDescription || 'Selecione uma opção',
+            options.dropdownOptions || []
+        );
 
-    /**
-     * Sets the modal title
-     * @property {string} - The modal title.
-     * @public
-     */
-    set title(value) {
-        this.#headerHtmlElement.querySelector('.modal-title').textContent = value;
-    }
+        // Initialize search box
+        this.#searchBox = new SearchBox(
+            'SearchBox',
+            options.searchPlaceholder || 'Buscar...'
+        );
 
-    /**
-     * Returns the dropdown description
-     * @property {string} - The dropdown description.
-     * @public
-     */
-    get dropdownDescription() {
-        return this.#dropdown.description;
-    }
-
-    /**
-     * Sets the dropdown description
-     * @property {string} - The dropdown description.
-     * @public
-     */
-    set dropdownDescription(value) {
-        this.#dropdown.description = value;
-    }
-
-    /**
-     * Returns the search box placeholder
-     * @property {string} - The search box placeholder.
-     * @public
-     */
-    get searchPlaceholder() {
-        return this.#searchBox.placeholder;
-    }
-
-    /**
-     * Sets the search box placeholder
-     * @property {string} - The search box placeholder.
-     * @public
-     */
-    set searchPlaceholder(value) {
-        this.#searchBox.placeholder = value;
-    }
-
-    /**
-     * Returns the source list title
-     * @property {string} - The source list title.
-     * @public
-     */
-    get sourceListTitle() {
-        return this.#dualList.sourceListTitle;
-    }
-
-    /**
-     * Sets the source list title
-     * @property {string} - The source list title.
-     * @public
-     */
-    set sourceListTitle(value) {
-        this.#dualList.sourceListTitle = value;
-    }
-
-    /**
-     * Returns the target list title
-     * @property {string} - The target list title.
-     * @public
-     */
-    get targetListTitle() {
-        return this.#dualList.targetListTitle;
-    }
-
-    /**
-     * Sets the target list title
-     * @property {string} - The target list title.
-     * @public
-     */
-    set targetListTitle(value) {
-        this.#dualList.targetListTitle = value;
-    }
-
-    /**
-     * Returns the items per page
-     * @property {number} - The number of items per page.
-     * @public
-     */
-    get itemsPerPage() {
-        return this.#dualList.itemsPerPage;
-    }
-
-    /**
-     * Sets the items per page
-     * @property {number} - The number of items per page.
-     * @public
-     */
-    set itemsPerPage(value) {
-        this.#dualList.itemsPerPage = value;
-    }
-
-    /**
-     * Sets the source items
-     * @property {Array} - The source items array.
-     * @public
-     */
-    set sourceItems(value) {
-        this.#dualList.sourceItems = value;
-    }
-
-    /**
-     * Sets the target items
-     * @property {Array} - The target items array.
-     * @public
-     */
-    set targetItems(value) {
-        this.#dualList.targetItems = value;
-    }
-
-    /**
-     * Sets the on transfer callback
-     * @property {Function} - The callback function.
-     * @public
-     */
-    set onTransfer(value) {
-        this.#dualList.onTransfer = value;
-    }
-
-    /**
-     * Class constructor - Returns a Modal instance.
-     */
-    constructor() {
-        this.#initializeComponents();
-        this.#initializeElement();
+        // Initialize dual list with all options
+        this.#dualList = new DualList(
+            'dualList',
+            options.sourceItems || [],
+            options.targetItems || [],
+            options.itemsPerPage || 5,
+            options.onTransfer || null,
+            options.sourceListTitle || 'Source List',
+            options.targetListTitle || 'Target List'
+        );
     }
 
     /**
@@ -246,7 +217,7 @@ export class Modal {
         const modalId = id;
         const tabIndex = '-1';
         const role = 'dialog';
-        const ariaLabelledBy = 'modalTitleLabel';
+        const ariaLabelledBy = 'modalTitleLabel'; // Must be the same as the header's label's id.
 
         const modal = document.createElement('div');
         for (const requiredClass of requiredClasses) {
@@ -255,7 +226,7 @@ export class Modal {
         modal.id = modalId;
         modal.tabIndex = tabIndex;
         modal.role = role;
-        modal.setAttribute('aria-labbeledby', ariaLabelledBy);
+        modal.setAttribute('aria-labelledby', ariaLabelledBy);
 
         // Create document div tag
         const documentRequiredClasses = [
@@ -270,7 +241,7 @@ export class Modal {
         documentDiv.role = documentRole;
 
         // Initialize Content
-        this.#initializeContent();
+        this.#initializeContent(label);
         documentDiv.appendChild(this.#contentHtmlElement);
 
         modal.appendChild(documentDiv);
@@ -280,10 +251,10 @@ export class Modal {
 
     /**
      * Initializes the content of the modal.
-     * @method
      * @private
+     * @param {string} title - The modal's title text
      */
-    #initializeContent(headerTitle = 'modalTitleLabel') {
+    #initializeContent(title) {
         // Create content div
         const requiredClasses = [
             'modal-content',
@@ -294,7 +265,7 @@ export class Modal {
         }
 
         // Header
-        this.#initializeHeader('headerId', headerTitle);
+        this.#initializeHeader('modalTitleLabel', title);
         modalContent.appendChild(this.#headerHtmlElement);
 
         // Body
@@ -302,20 +273,20 @@ export class Modal {
         modalContent.appendChild(this.#bodyHtmlElement);
 
         // Footer
-        this.#initializeFooter();
-        modalContent.appendChild(this.#footerHtmlElement);
+        if (this.#footerHtmlElement) {
+            modalContent.appendChild(this.#footerHtmlElement);
+        }
 
         this.#contentHtmlElement = modalContent;
     }
 
     /**
      * Initializes the header of the modal.
-     * @method
      * @private
-     * @param {string} [labelId='modalTitleLabel'] - The id for the title's label.
-     * @param {string} [labelText='Modal Title'] - The text to print in the title.
+     * @param {string} labelId - The id for the title's label
+     * @param {string} labelText - The text to display in the title
      */
-    #initializeHeader(labelId = 'modalTitleLabel', labelText = 'Modal Title') {
+    #initializeHeader(labelId, labelText) {
         // Create header div
         const requiredClasses = [
             'modal-header',
@@ -349,44 +320,14 @@ export class Modal {
         for (const requiredClass of titleRequiredClasses) {
             h4Title.classList.add(requiredClass);
         }
-        h4Title.id = labelId.trim().length > 0 ? labelId.trim() : 'modalTitleLabel';
-        h4Title.innerText = labelText.trim().length > 0 ? labelText.trim() : 'Dialog Modal';
+        h4Title.id = labelId;
+        h4Title.innerText = labelText;
 
         // Append elements to Header
         modalHeader.appendChild(closeButton);
         modalHeader.appendChild(h4Title);
 
         this.#headerHtmlElement = modalHeader;
-    }
-
-    /**
-     * Initializes the components of the modal.
-     * @private
-     */
-    #initializeComponents() {
-        // Initialize dropdown
-        this.#dropdown = new Dropdown('dropDownObject', true, 'Selecione uma opção', []);
-
-        // Initialize search box
-        this.#searchBox = new SearchBox('SearchBox', 'Buscar...');
-
-        // Initialize dual list with empty arrays
-        this.#dualList = new DualList('dualList', [], [], 5);
-    }
-
-    /**
-     * Initializes the dual list with source and target items.
-     * @public
-     * @param {Array} sourceItems - The source items array
-     * @param {Array} targetItems - The target items array
-     * @param {number} itemsPerPage - Number of items per page
-     */
-    initializeDualList(sourceItems, targetItems, itemsPerPage) {
-        this.#dualList = new DualList('dualList', sourceItems, targetItems, itemsPerPage);
-        this.#bodyHtmlElement.querySelector('form').replaceChild(
-            this.#dualList.render(),
-            this.#bodyHtmlElement.querySelector('form').lastElementChild
-        );
     }
 
     /**
@@ -414,12 +355,12 @@ export class Modal {
             form.classList.add(requiredClass);
         }
 
-        // Append components to form
+        // Append configured components to form
         form.appendChild(this.#dropdown.render());
         form.appendChild(this.#searchBox.render());
         form.appendChild(this.#dualList.render());
-
         body.appendChild(form);
+
         this.#bodyHtmlElement = body;
     }
 
@@ -478,12 +419,37 @@ export class Modal {
     }
 
     /**
+     * Updates the dual list with new items and configuration.
+     * @public
+     * @param {Array} sourceItems - The source items array
+     * @param {Array} targetItems - The target items array
+     * @param {number} itemsPerPage - Number of items per page
+     */
+    updateDualList(sourceItems, targetItems, itemsPerPage) {
+        this.#dualList = new DualList(
+            'dualList',
+            sourceItems || [],
+            targetItems || [],
+            itemsPerPage || 5,
+            this.onTransfer,
+            this.sourceListTitle || 'Source List',
+            this.targetListTitle || 'Target List'
+        );
+
+        // Update the dual list in the form
+        const form = this.#bodyHtmlElement.querySelector('form');
+        const oldDualList = form.querySelector('#dualList').closest('.row');
+        form.replaceChild(this.#dualList.render(), oldDualList);
+    }
+
+    /**
      * Returns an HTMLElement object to be appended to the HTML Document
      * @method
      * @public
      * @returns {HTMLDivElement} The Modal's HTMLElement
     */
     render() {
+        // Return the modal's HTMLElement object;
         return this.#htmlElement;
     }
 }
