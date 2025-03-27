@@ -370,8 +370,23 @@ export class Modal {
         // Initialize search box
         this.#searchBox = new SearchBox('SearchBox', 'Buscar...');
 
-        // Initialize dual list
+        // Initialize dual list with empty arrays
         this.#dualList = new DualList('dualList', [], [], 5);
+    }
+
+    /**
+     * Initializes the dual list with source and target items.
+     * @public
+     * @param {Array} sourceItems - The source items array
+     * @param {Array} targetItems - The target items array
+     * @param {number} itemsPerPage - Number of items per page
+     */
+    initializeDualList(sourceItems, targetItems, itemsPerPage) {
+        this.#dualList = new DualList('dualList', sourceItems, targetItems, itemsPerPage);
+        this.#bodyHtmlElement.querySelector('form').replaceChild(
+            this.#dualList.render(),
+            this.#bodyHtmlElement.querySelector('form').lastElementChild
+        );
     }
 
     /**
