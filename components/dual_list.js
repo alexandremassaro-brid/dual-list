@@ -76,7 +76,7 @@ export class DualList {
      * @param {string} title - Title for the source list
      */
     #initializeSourceList(id, items, itemsPerPage, title) {
-        const list = new List(id, title);
+        const list = new List(id, title, itemsPerPage);
 
         items.forEach(item => {
             list.addItem(item.id, item.caption);
@@ -147,7 +147,7 @@ export class DualList {
      * @param {string} title - Title for the destination list
      */
     #initializeDestinationList(id, items, itemsPerPage, title) {
-        const list = new List(id, title);
+        const list = new List(id, title, itemsPerPage);
 
         items.forEach(item => {
             list.addItem(item.id, item.caption);
