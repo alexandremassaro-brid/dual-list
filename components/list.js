@@ -262,6 +262,24 @@ export class List {
     }
 
     /**
+     * Gets the list container element.
+     * @public
+     * @returns {HTMLDivElement} The list container element
+     */
+    get listElement() {
+        return this.#itemsList;
+    }
+
+    /**
+     * Updates the list's pagination and visibility.
+     * @public
+     */
+    update() {
+        this.#updateItemsVisibility();
+        this.#updatePagination();
+    }
+
+    /**
      * Renders the list component.
      * @public
      * @returns {HTMLElement} The list HTML element
@@ -269,6 +287,11 @@ export class List {
     render() {
         this.#updateItemsVisibility();
         this.#updatePagination();
+
+        // Store List instance reference in panel element
+        const panel = this.#htmlElement.querySelector('.panel');
+        panel.__list = this;
+
         return this.#htmlElement;
     }
 }

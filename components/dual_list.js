@@ -162,6 +162,19 @@ export class DualList {
      * @param {Function} onTransfer - Callback when items are transferred
      */
     #handleTransferAllToDestination(onTransfer) {
+        const sourceList = this.#sourceListHtmlElement.querySelector('.list-group');
+        const destinationList = this.#destinationListHtmlElement.querySelector('.list-group');
+        const items = Array.from(sourceList.children);
+
+        items.forEach(item => {
+            item.classList.remove('active');
+            destinationList.appendChild(item);
+        });
+
+        // Update pagination for both lists
+        this.#sourceListHtmlElement.querySelector('.panel').__list.update();
+        this.#destinationListHtmlElement.querySelector('.panel').__list.update();
+
         if (onTransfer) {
             onTransfer('allToDestination');
         }
@@ -173,6 +186,19 @@ export class DualList {
      * @param {Function} onTransfer - Callback when items are transferred
      */
     #handleTransferSelectedToDestination(onTransfer) {
+        const sourceList = this.#sourceListHtmlElement.querySelector('.list-group');
+        const destinationList = this.#destinationListHtmlElement.querySelector('.list-group');
+        const selectedItems = Array.from(sourceList.querySelectorAll('.active'));
+
+        selectedItems.forEach(item => {
+            item.classList.remove('active');
+            destinationList.appendChild(item);
+        });
+
+        // Update pagination for both lists
+        this.#sourceListHtmlElement.querySelector('.panel').__list.update();
+        this.#destinationListHtmlElement.querySelector('.panel').__list.update();
+
         if (onTransfer) {
             onTransfer('selectedToDestination');
         }
@@ -184,6 +210,19 @@ export class DualList {
      * @param {Function} onTransfer - Callback when items are transferred
      */
     #handleTransferSelectedToSource(onTransfer) {
+        const sourceList = this.#sourceListHtmlElement.querySelector('.list-group');
+        const destinationList = this.#destinationListHtmlElement.querySelector('.list-group');
+        const selectedItems = Array.from(destinationList.querySelectorAll('.active'));
+
+        selectedItems.forEach(item => {
+            item.classList.remove('active');
+            sourceList.appendChild(item);
+        });
+
+        // Update pagination for both lists
+        this.#sourceListHtmlElement.querySelector('.panel').__list.update();
+        this.#destinationListHtmlElement.querySelector('.panel').__list.update();
+
         if (onTransfer) {
             onTransfer('selectedToSource');
         }
@@ -195,6 +234,19 @@ export class DualList {
      * @param {Function} onTransfer - Callback when items are transferred
      */
     #handleTransferAllToSource(onTransfer) {
+        const sourceList = this.#sourceListHtmlElement.querySelector('.list-group');
+        const destinationList = this.#destinationListHtmlElement.querySelector('.list-group');
+        const items = Array.from(destinationList.children);
+
+        items.forEach(item => {
+            item.classList.remove('active');
+            sourceList.appendChild(item);
+        });
+
+        // Update pagination for both lists
+        this.#sourceListHtmlElement.querySelector('.panel').__list.update();
+        this.#destinationListHtmlElement.querySelector('.panel').__list.update();
+
         if (onTransfer) {
             onTransfer('allToSource');
         }
