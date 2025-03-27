@@ -1,30 +1,61 @@
 import { List } from './list.js';
 
+/**
+ * @classdesc A dual list component that allows transferring items between source and destination lists.
+ * @class
+ * @public
+ */
 export class DualList {
+    /**
+     * The HTML element used to render the dual list container.
+     * @private
+     * @type {HTMLDivElement}
+     */
     #htmlElement;
+
+    /**
+     * The HTML element containing the source list.
+     * @private
+     * @type {HTMLDivElement}
+     */
     #sourceListHtmlElement;
+
+    /**
+     * The HTML element containing the action buttons.
+     * @private
+     * @type {HTMLDivElement}
+     */
     #actionButtons;
+
+    /**
+     * The HTML element containing the destination list.
+     * @private
+     * @type {HTMLDivElement}
+     */
     #destinationListHtmlElement;
 
-    constructor() {
-        // Implementar inicializações dos elementos.
+    /**
+     * Creates a new DualList instance.
+     * @constructor
+     * @param {string} [id='dualList'] - The unique identifier for the dual list
+     * @param {Array} [sourceItems=[]] - Initial items for the source list
+     * @param {Array} [targetItems=[]] - Initial items for the target list
+     * @param {number} [itemsPerPage=5] - Number of items per page
+     * @param {Function} [onTransfer=null] - Callback when items are transferred
+     */
+    constructor(id = 'dualList', sourceItems = [], targetItems = [], itemsPerPage = 5, onTransfer = null) {
         // Dual list Row div
-        let requiredClasses = [
-            'row',
-        ];
         const dualList = document.createElement('div');
-        for (const requiredClass of requiredClasses) {
-            dualList.classList.add(requiredClass);
-        }
+        dualList.classList.add('row');
 
         // Source list
-        this.#initializeSourceList();
+        this.#initializeSourceList(id + 'Source', sourceItems, itemsPerPage);
 
         // Action Button
-        this.#initializeActionButtons();
+        this.#initializeActionButtons(id + 'Actions', onTransfer);
 
         // Destination List
-        this.#initializeDestinationList();
+        this.#initializeDestinationList(id + 'Destination', targetItems, itemsPerPage);
 
         // Append elements to the DualList
         dualList.appendChild(this.#sourceListHtmlElement);
@@ -34,146 +65,143 @@ export class DualList {
         this.#htmlElement = dualList;
     }
 
-    #initializeSourceList() {
-        const list = new List('sourceList', 'Source List');
+    /**
+     * Initializes the source list component.
+     * @private
+     * @param {string} id - The unique identifier for the source list
+     * @param {Array} items - Initial items for the source list
+     * @param {number} itemsPerPage - Number of items per page
+     */
+    #initializeSourceList(id, items, itemsPerPage) {
+        const list = new List(id, 'Source List');
 
-        list.addItem('item1', 'Item 1');
+        items.forEach(item => {
+            list.addItem(item.id, item.caption);
+        });
 
         this.#sourceListHtmlElement = list.render();
     }
 
-    #initializeActionButtons() {
-        // Action buttons
-        let requiredClasses = [
-            'col-xs-2',
-            'text-center',
-        ];
+    /**
+     * Initializes the action buttons component.
+     * @private
+     * @param {string} id - The unique identifier for the action buttons
+     * @param {Function} onTransfer - Callback when items are transferred
+     */
+    #initializeActionButtons(id, onTransfer) {
         const actionButtons = document.createElement('div');
-        for (const requiredClass of requiredClasses) {
-            actionButtons.classList.add(requiredClass);
-        }
+        actionButtons.classList.add('col-xs-2', 'text-center');
 
-        requiredClasses = [
-            'btn-group-vertical',
-            'btn-group-sm',
-        ];
         const buttonGroup = document.createElement('div');
-        for (const requiredClass of requiredClasses) {
-            buttonGroup.classList.add(requiredClass);
-        }
+        buttonGroup.classList.add('btn-group-vertical', 'btn-group-sm');
 
-        requiredClasses = [
-            'btn',
-            'btn-default',
+        const buttons = [
+            {
+                classes: ['btn', 'btn-default'],
+                icon: ['glyphicon', 'glyphicon-fast-forward'],
+                action: () => this.#handleTransferAllToDestination(onTransfer)
+            },
+            {
+                classes: ['btn', 'btn-default'],
+                icon: ['glyphicon', 'glyphicon-forward'],
+                action: () => this.#handleTransferSelectedToDestination(onTransfer)
+            },
+            {
+                classes: ['btn', 'btn-default'],
+                icon: ['glyphicon', 'glyphicon-backward'],
+                action: () => this.#handleTransferSelectedToSource(onTransfer)
+            },
+            {
+                classes: ['btn', 'btn-default'],
+                icon: ['glyphicon', 'glyphicon-fast-backward'],
+                action: () => this.#handleTransferAllToSource(onTransfer)
+            }
         ];
-        const allToDestinationButton = document.createElement('button');
-        for (const requiredClass of requiredClasses) {
-            allToDestinationButton.classList.add(requiredClass);
-        }
-        allToDestinationButton.onclick = () => {
-            console.log('Move all to destination');
-        };
 
-        requiredClasses = [
-            'glyphicon',
-            'glyphicon-fast-forward',
-        ];
-        const allToDestinationIcon = document.createElement('span');
-        for (const requiredClass of requiredClasses) {
-            allToDestinationIcon.classList.add(requiredClass);
-        }
-        allToDestinationIcon.ariaHidden = 'true';
+        buttons.forEach(button => {
+            const btn = document.createElement('button');
+            button.classes.forEach(cls => btn.classList.add(cls));
+            btn.onclick = button.action;
 
-        requiredClasses = [
-            'btn',
-            'btn-default',
-        ];
-        const selectedToDestinationButton = document.createElement('button');
-        for (const requiredClass of requiredClasses) {
-            selectedToDestinationButton.classList.add(requiredClass);
-        }
-        selectedToDestinationButton.onclick = () => {
-            console.log('Move selected to destination');
-        };
+            const icon = document.createElement('span');
+            button.icon.forEach(cls => icon.classList.add(cls));
+            icon.ariaHidden = 'true';
 
-        requiredClasses = [
-            'glyphicon',
-            'glyphicon-forward',
-        ];
-        const selectedToDestinationIcon = document.createElement('span');
-        for (const requiredClass of requiredClasses) {
-            selectedToDestinationIcon.classList.add(requiredClass);
-        }
-        selectedToDestinationIcon.ariaHidden = 'true';
+            btn.appendChild(icon);
+            buttonGroup.appendChild(btn);
+        });
 
-        requiredClasses = [
-            'btn',
-            'btn-default',
-        ];
-        const selectedToOriginButton = document.createElement('button');
-        for (const requiredClass of requiredClasses) {
-            selectedToOriginButton.classList.add(requiredClass);
-        }
-        selectedToOriginButton.onclick = () => {
-            console.log('Move selected to origin');
-        };
-
-        requiredClasses = [
-            'glyphicon',
-            'glyphicon-backward',
-        ];
-        const selectedToOriginIcon = document.createElement('span');
-        for (const requiredClass of requiredClasses) {
-            selectedToOriginIcon.classList.add(requiredClass);
-        }
-        selectedToOriginIcon.ariaHidden = 'true';
-
-        requiredClasses = [
-            'btn',
-            'btn-default',
-        ];
-        const allToOriginButton = document.createElement('button');
-        for (const requiredClass of requiredClasses) {
-            allToOriginButton.classList.add(requiredClass);
-        }
-        allToOriginButton.onclick = () => {
-            console.log('Move all to origin');
-        };
-
-        requiredClasses = [
-            'glyphicon',
-            'glyphicon-fast-backward',
-        ];
-        const allToOriginIcon = document.createElement('span');
-        for (const requiredClass of requiredClasses) {
-            allToOriginIcon.classList.add(requiredClass);
-        }
-        allToOriginIcon.ariaHidden = 'true';
-
-        allToDestinationButton.appendChild(allToDestinationIcon);
-        selectedToDestinationButton.appendChild(selectedToDestinationIcon);
-        selectedToOriginButton.appendChild(selectedToOriginIcon);
-        allToOriginButton.appendChild(allToOriginIcon);
-        buttonGroup.appendChild(allToDestinationButton);
-        buttonGroup.appendChild(selectedToDestinationButton);
-        buttonGroup.appendChild(selectedToOriginButton);
-        buttonGroup.appendChild(allToOriginButton);
         actionButtons.appendChild(buttonGroup);
-
         this.#actionButtons = actionButtons;
     }
 
-    #initializeDestinationList() {
-        const list = new List('destinationList', 'Destination List');
+    /**
+     * Initializes the destination list component.
+     * @private
+     * @param {string} id - The unique identifier for the destination list
+     * @param {Array} items - Initial items for the destination list
+     * @param {number} itemsPerPage - Number of items per page
+     */
+    #initializeDestinationList(id, items, itemsPerPage) {
+        const list = new List(id, 'Destination List');
 
-        list.addItem('item2', 'Item 2');
+        items.forEach(item => {
+            list.addItem(item.id, item.caption);
+        });
 
         this.#destinationListHtmlElement = list.render();
     }
 
-    render() {
-        // Implementar método render.
-        return this.#htmlElement;
+    /**
+     * Handles transferring all items to destination.
+     * @private
+     * @param {Function} onTransfer - Callback when items are transferred
+     */
+    #handleTransferAllToDestination(onTransfer) {
+        if (onTransfer) {
+            onTransfer('allToDestination');
+        }
     }
 
+    /**
+     * Handles transferring selected items to destination.
+     * @private
+     * @param {Function} onTransfer - Callback when items are transferred
+     */
+    #handleTransferSelectedToDestination(onTransfer) {
+        if (onTransfer) {
+            onTransfer('selectedToDestination');
+        }
+    }
+
+    /**
+     * Handles transferring selected items to source.
+     * @private
+     * @param {Function} onTransfer - Callback when items are transferred
+     */
+    #handleTransferSelectedToSource(onTransfer) {
+        if (onTransfer) {
+            onTransfer('selectedToSource');
+        }
+    }
+
+    /**
+     * Handles transferring all items to source.
+     * @private
+     * @param {Function} onTransfer - Callback when items are transferred
+     */
+    #handleTransferAllToSource(onTransfer) {
+        if (onTransfer) {
+            onTransfer('allToSource');
+        }
+    }
+
+    /**
+     * Renders the dual list component.
+     * @public
+     * @returns {HTMLElement} The dual list HTML element
+     */
+    render() {
+        return this.#htmlElement;
+    }
 }

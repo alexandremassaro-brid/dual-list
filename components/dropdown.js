@@ -1,12 +1,15 @@
 /**
+ * @classdesc Represents an option in the dropdown list.
  * @class
- * @description Represents an option in the dropdown list.
+ * @private
  */
 class DropdownOption {
     #id;
     #caption;
 
     /**
+     * Creates a new DropdownOption instance.
+     * @constructor
      * @param {string} id - The option's unique identifier.
      * @param {string} caption - The text to display.
      */
@@ -15,222 +18,327 @@ class DropdownOption {
         this.#caption = caption;
     }
 
+    /**
+     * Gets the option's unique identifier.
+     * @returns {string} The option's ID.
+     */
     get id() { return this.#id; }
+
+    /**
+     * Gets the option's display text.
+     * @returns {string} The option's caption.
+     */
     get caption() { return this.#caption; }
 }
 
 /**
- * @classdesc A dropdown Bootstratp 3.3.7 compatible component.
+ * @classdesc A Bootstrap 3.3.7 compatible dropdown component that supports required fields,
+ * descriptions, and change event handling.
  * @class
  * @public
- * @todo Implementar método render.
  */
 export class Dropdown {
     /**
-     * The Html component used to render the dropdown to the screen.
+     * The HTML container element for the dropdown.
      * @private
-     * @constant
      * @type {HTMLDivElement}
      */
     #htmlElement;
 
     /**
-     * The Html component used to render the select to the screen.
+     * The select element used for the dropdown.
      * @private
-     * @constant
      * @type {HTMLSelectElement}
      */
     #selectHtmlElement;
 
     /**
-     * The description of the dropdown.
-     * If the string has length greater then 0, 
-     * then the first option is the text provided but disabled,
-     * so the user can't select it.
+     * The description text shown as the first disabled option.
      * @private
      * @type {string}
      */
     #description;
 
     /**
-     * The list of options of the dropdown.
+     * The list of available options.
      * @private
      * @type {DropdownOption[]}
      */
     #optionsList;
 
     /**
-     * Returns the select id - Can be set.
-     * @property {string} - The HTML element id.
+     * Callback function for change events.
+     * @private
+     * @type {Function|null}
+     */
+    #onChangeCallback;
+
+    /**
+     * Gets the select element's ID.
+     * @returns {string} The HTML element ID.
      * @public
      */
     get id() {
         return this.#selectHtmlElement.id;
     }
 
+    /**
+     * Sets the select element's ID.
+     * @param {string} value - The new ID value.
+     * @public
+     */
     set id(value = 'selectId') {
-        this.#selectHtmlElement = value;
+        this.#selectHtmlElement.id = value;
     }
 
     /**
-     * Defines if the dropdown is required.
-     * If true the user has to pick one option.
-     * @property {boolean} - Whether the dropdown is required.
+     * Gets whether the dropdown is required.
+     * @returns {boolean} True if the dropdown is required.
      * @public
      */
     get isRequired() {
         return this.#selectHtmlElement.required;
     }
 
+    /**
+     * Sets whether the dropdown is required.
+     * @param {boolean} value - Whether the dropdown is required.
+     * @public
+     */
     set isRequired(value = true) {
         this.#selectHtmlElement.required = value;
     }
 
     /**
-     * The description of the dropdown.
-     * If the string has length greater then 0, 
-     * then the first option is the text provided but disabled,
-     * so the user can't select it.
-     * @property {string} - The description of the dropdown.
+     * Gets the dropdown description.
+     * @returns {string} The description text.
      * @public
      */
     get description() {
         return this.#description;
     }
 
+    /**
+     * Sets the dropdown description.
+     * @param {string} value - The new description text.
+     * @public
+     */
     set description(value = '') {
         this.#description = value;
+        this.#updateDescription();
     }
 
     /**
-     * The list of options of the dropdown.
-     * Must be a list of DropdownOption objects.
-     * @property {DropdownOption[]} - The list of dropdown options.
+     * Gets the list of options.
+     * @returns {DropdownOption[]} The list of options.
      * @public
      */
     get optionsList() {
         return this.#optionsList;
     }
 
+    /**
+     * Sets the list of options.
+     * @param {DropdownOption[]} value - The new list of options.
+     * @throws {TypeError} If any option is not a DropdownOption instance.
+     * @public
+     */
     set optionsList(value = []) {
+        this.#validateOptionsList(value);
         this.#optionsList = value;
+        this.#updateOptions();
     }
 
     /**
-     * Returns a DropdownOption object. Consists of an id and caption.
-     * Ex:
-     *     const dropdownOption = dropdown.DropdownOption('optionId', 'optionCaption');
-     *     console.log(dropdownOption.id); // Should print optionId
-     *     console.log(dropdownOption.caption); // Should print optionCaption
+     * Creates a new DropdownOption instance.
      * @static
-     * @param {string} id - A unique identifier for the dropdown option.
-     * @param {string} caption - A caption to be displayed with the dropdown option.
+     * @param {string} id - The option's unique identifier.
+     * @param {string} caption - The option's display text.
+     * @returns {DropdownOption} A new DropdownOption instance.
+     * @public
      */
     static dropdownOptionObject(id, caption) {
         return new DropdownOption(id, caption);
     }
 
     /**
-     * Class constructor - Returns a Dropdown instance.
-     * @param {string} [id='dropDownElement'] - The unique identifier of the dropdown.
-     * @param {boolean} [isRequired=true] - Defines if it is required to select an option.
-     * @param {string} [description=''] - If provided, the first option will be disabled and show the text provided.
-     * @param {Iterable<DropdownOption>} [optionsList=[]] - Initializes the dropdown with the items provided in the list.
+     * Creates a new Dropdown instance.
+     * @constructor
+     * @param {string} [id='dropDownElement'] - The dropdown's unique identifier.
+     * @param {boolean} [isRequired=true] - Whether selection is required.
+     * @param {string} [description=''] - Optional description text.
+     * @param {DropdownOption[]} [optionsList=[]] - Initial list of options.
+     * @param {Function} [onChange=null] - Callback for change events.
      */
-    constructor(id = 'dropDownElement', isRequired = true, description = '', optionsList = []) {
-        // Inicializar elemento
+    constructor(id = 'dropDownElement', isRequired = true, description = '', optionsList = [], onChange = null) {
+        // Initialize properties first
         this.#description = description;
         this.#optionsList = optionsList;
-        
-        // Create dropdown div
-        let requiredClasses = [
-            'col-xs-12',
-        ];
-        const dropdown = document.createElement('div');
-        for (const requiredClass of requiredClasses) {
-            dropdown.classList.add(requiredClass);
-        }
-        
-        // form-group
-        requiredClasses = [
-            'form-group',
-            'form-group-sm',
-        ];
-        const formGroup = document.createElement('div');
-        for (const requiredClass of requiredClasses) {
-            formGroup.classList.add(requiredClass);
-        }
+        this.#onChangeCallback = onChange;
 
-        // select form-control
-        requiredClasses = [
-            'form-control',
-            'input-sm',
-        ];
-        const select = document.createElement('select');
-        for (const requiredClass of requiredClasses) {
-            select.classList.add(requiredClass);
+        // Create elements
+        const { dropdown, select } = this.#createElements(id, isRequired);
+        this.#htmlElement = dropdown;
+        this.#selectHtmlElement = select;
+
+        // Setup content and events
+        if (this.#description?.trim()) {
+            this.#updateDescription();
         }
+        if (this.#optionsList?.length) {
+            this.#updateOptions();
+        }
+        this.#setupEventListeners();
+    }
+
+    /**
+     * Creates the HTML elements for the dropdown.
+     * @private
+     * @param {string} id - The dropdown's ID.
+     * @param {boolean} isRequired - Whether selection is required.
+     * @returns {{dropdown: HTMLDivElement, select: HTMLSelectElement}} The created elements.
+     */
+    #createElements(id, isRequired) {
+        // Create dropdown div
+        const dropdown = document.createElement('div');
+        dropdown.classList.add('col-xs-12');
+
+        // Create form group
+        const formGroup = document.createElement('div');
+        formGroup.classList.add('form-group', 'form-group-sm');
+
+        // Create select element
+        const select = document.createElement('select');
+        select.classList.add('form-control', 'input-sm');
         select.id = id;
         select.required = isRequired;
 
-        // select description
-        if (this.#description && this.#description.trim().length > 0) {
-            const selectDescription = document.createElement('option');
-            selectDescription.value = '';
-            selectDescription.selected = true;
-            selectDescription.disabled = true;
-            selectDescription.innerText = this.#description;
-            select.appendChild(selectDescription);
-        }
-
-        // select options
-        if (this.#optionsList && typeof this.optionsList[Symbol.iterator] === 'function'){
-            for (const option in this.#optionsList) {
-                if (!(option instanceof DropdownOption)) {
-                    throw new TypeError('Only DropdownOption instances can be added!');
-                }
-                const currentOption = document.createElement('option');
-                currentOption.value = option.id;
-                currentOption.innerText = option.caption;
-                
-                select.appendChild(currentOption);
-            }
-        }
-
-        // Append elements to dropdown div
+        // Assemble elements
         formGroup.appendChild(select);
-        dropdown.appendChild(formGroup);     
+        dropdown.appendChild(formGroup);
 
-        this.#selectHtmlElement = select;
-        this.#htmlElement = dropdown;
+        return { dropdown, select };
     }
 
     /**
-     * Adds a DropdownOption to the Dropdown
-     * @method
-     * @param {DropdownOption} dropdownOption 
+     * Sets up event listeners.
+     * @private
+     */
+    #setupEventListeners() {
+        this.#selectHtmlElement.addEventListener('change', (event) => {
+            if (this.#onChangeCallback) {
+                this.#onChangeCallback(event.target.value);
+            }
+        });
+    }
+
+    /**
+     * Updates the description option.
+     * @private
+     */
+    #updateDescription() {
+        const firstOption = this.#selectHtmlElement.firstElementChild;
+        if (firstOption && firstOption.disabled) {
+            firstOption.innerText = this.#description;
+        } else if (this.#description?.trim()) {
+            const descriptionOption = document.createElement('option');
+            descriptionOption.value = '';
+            descriptionOption.selected = true;
+            descriptionOption.disabled = true;
+            descriptionOption.innerText = this.#description;
+            this.#selectHtmlElement.insertBefore(descriptionOption, this.#selectHtmlElement.firstChild);
+        }
+    }
+
+    /**
+     * Updates the options list.
+     * @private
+     */
+    #updateOptions() {
+        // Remove existing options except description
+        while (this.#selectHtmlElement.children.length > 1) {
+            this.#selectHtmlElement.removeChild(this.#selectHtmlElement.lastChild);
+        }
+
+        // Add new options
+        for (const option of this.#optionsList) {
+            const optionElement = document.createElement('option');
+            optionElement.value = option.id;
+            optionElement.innerText = option.caption;
+            this.#selectHtmlElement.appendChild(optionElement);
+        }
+    }
+
+    /**
+     * Validates the options list.
+     * @private
+     * @param {DropdownOption[]} options - The options to validate.
+     * @throws {TypeError} If any option is invalid.
+     */
+    #validateOptionsList(options) {
+        if (!Array.isArray(options)) {
+            throw new TypeError('Options must be an array');
+        }
+        for (const option of options) {
+            if (!(option instanceof DropdownOption)) {
+                throw new TypeError('Only DropdownOption instances can be added!');
+            }
+        }
+    }
+
+    /**
+     * Adds a new option to the dropdown.
+     * @param {DropdownOption} dropdownOption - The option to add.
+     * @throws {TypeError} If the option is invalid.
      * @public
      */
     addOption(dropdownOption) {
-        if (!(dropdownOption && dropdownOption instanceof DropdownOption)) {
+        if (!(dropdownOption instanceof DropdownOption)) {
             throw new TypeError('Only DropdownOption instances can be added!');
         }
-        
+
         this.#optionsList.push(dropdownOption);
-        
+
         const option = document.createElement('option');
         option.value = dropdownOption.id;
         option.innerText = dropdownOption.caption;
-        
         this.#selectHtmlElement.appendChild(option);
-        
     }
 
     /**
-     * Returns an HTMLElement object with the dropdown to be added to the page.
-     * @method
+     * Gets the currently selected value.
+     * @returns {string} The selected value.
      * @public
-     * @returns {HTMLDivElement} - A HTMLElement object with the dropdown to be added to the page.
+     */
+    getValue() {
+        return this.#selectHtmlElement.value;
+    }
+
+    /**
+     * Sets the selected value.
+     * @param {string} value - The value to select.
+     * @public
+     */
+    setValue(value) {
+        this.#selectHtmlElement.value = value;
+    }
+
+    /**
+     * Validates the current selection.
+     * @returns {boolean} True if the selection is valid.
+     * @public
+     */
+    validate() {
+        if (this.isRequired) {
+            return this.getValue() !== '';
+        }
+        return true;
+    }
+
+    /**
+     * Renders the dropdown component.
+     * @returns {HTMLDivElement} The rendered dropdown element.
+     * @public
      */
     render() {
         return this.#htmlElement;
