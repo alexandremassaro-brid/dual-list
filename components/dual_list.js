@@ -253,6 +253,19 @@ export class DualList {
     }
 
     /**
+     * Filters items in both lists based on the given text.
+     * @public
+     * @param {string} text - The text to filter items by
+     */
+    filter(text) {
+        const sourceList = this.#sourceListHtmlElement.querySelector('.panel').__list;
+        const destinationList = this.#destinationListHtmlElement.querySelector('.panel').__list;
+
+        sourceList.filter(text);
+        destinationList.filter(text);
+    }
+
+    /**
      * Renders the dual list component.
      * @public
      * @returns {HTMLElement} The dual list HTML element

@@ -93,6 +93,13 @@ export class List {
     #currentPage = 1;
 
     /**
+     * The current filter text.
+     * @private
+     * @type {string}
+     */
+    #filterText = '';
+
+    /**
      * Creates a new List instance.
      * @constructor
      * @param {string} [id='List'] - The unique identifier for the list
@@ -121,13 +128,13 @@ export class List {
 
         // Create items container
         const itemsList = document.createElement('div');
-        itemsList.classList.add('list-group');
+        itemsList.classList.add('list-group', 'small');
         itemsList.id = id + 'ItemsList';
         this.#itemsList = itemsList;
 
         // Create footer for pagination
         const footer = document.createElement('div');
-        footer.classList.add('panel-footer');
+        footer.classList.add('panel-footer', 'p-0', 'm-0', 'small');
         footer.id = id + 'Pagination';
         this.#paginationElement = footer;
 
@@ -142,12 +149,23 @@ export class List {
     }
 
     /**
-     * Gets the total number of pages based on items per page.
+     * Gets the total number of visible items based on current filter.
+     * @private
+     * @returns {number} Total number of visible items
+     */
+    #getVisibleItemsCount() {
+        return Array.from(this.#itemsList.children).filter(item =>
+            !this.#filterText || item.textContent.toLowerCase().includes(this.#filterText)
+        ).length;
+    }
+
+    /**
+     * Gets the total number of pages based on visible items.
      * @private
      * @returns {number} Total number of pages
      */
     #getTotalPages() {
-        return Math.ceil(this.#itemsList.children.length / this.#itemsPerPage);
+        return Math.ceil(this.#getVisibleItemsCount() / this.#itemsPerPage);
     }
 
     /**
@@ -160,9 +178,10 @@ export class List {
 
         const pagination = document.createElement('nav');
         pagination.setAttribute('aria-label', 'Page navigation');
+        pagination.classList.add('m-0', 'small');
 
         const ul = document.createElement('ul');
-        ul.classList.add('pagination', 'pagination-sm');
+        ul.classList.add('pagination', 'pagination-sm', 'm-0');
 
         // Previous button
         const prevLi = document.createElement('li');
@@ -228,16 +247,38 @@ export class List {
     }
 
     /**
-     * Updates the visibility of items based on current page.
+     * Filters items based on the given text.
+     * @public
+     * @param {string} text - The text to filter items by
+     */
+    filter(text) {
+        this.#filterText = text.toLowerCase();
+        this.#currentPage = 1; // Reset to first page when filtering
+        this.#updateItemsVisibility();
+        this.#updatePagination();
+    }
+
+    /**
+     * Updates the visibility of items based on current page and filter.
      * @private
      */
     #updateItemsVisibility() {
-        const items = this.#itemsList.children;
+        const items = Array.from(this.#itemsList.children);
         const startIndex = (this.#currentPage - 1) * this.#itemsPerPage;
         const endIndex = startIndex + this.#itemsPerPage;
 
-        Array.from(items).forEach((item, index) => {
-            if (index >= startIndex && index < endIndex) {
+        // First, determine which items match the filter
+        const visibleItems = items.filter(item =>
+            !this.#filterText || item.textContent.toLowerCase().includes(this.#filterText)
+        );
+
+        // Then show/hide items based on pagination
+        items.forEach(item => {
+            const isVisible = visibleItems.includes(item);
+            const isOnCurrentPage = visibleItems.indexOf(item) >= startIndex &&
+                visibleItems.indexOf(item) < endIndex;
+
+            if (isVisible && isOnCurrentPage) {
                 item.style.removeProperty('display');
             } else {
                 item.style.display = 'none';

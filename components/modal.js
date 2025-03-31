@@ -183,10 +183,15 @@ export class Modal {
             options.dropdownOptions || []
         );
 
-        // Initialize search box
+        // Initialize search box with filtering callback
         this.#searchBox = new SearchBox(
             'SearchBox',
-            options.searchPlaceholder || 'Buscar...'
+            options.searchPlaceholder || 'Buscar...',
+            (searchText) => {
+                if (this.#dualList) {
+                    this.#dualList.filter(searchText);
+                }
+            }
         );
 
         // Initialize dual list with all options
