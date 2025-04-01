@@ -33,7 +33,9 @@ class ListItem {
         listItem.dataset.id = id;
         listItem.textContent = caption;
 
-        listItem.onclick = () => {
+        listItem.onclick = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
             listItem.classList.toggle('active');
         };
 

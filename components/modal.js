@@ -406,7 +406,9 @@ export class Modal {
         cancelButton.type = 'button';
         cancelButton.innerText = cancelButtonLabel.trim().length > 0 ? cancelButtonLabel.trim() : 'Cancelar';
         cancelButton.setAttribute('data-dismiss', 'modal');
-        cancelButton.onclick = () => {
+        cancelButton.onclick = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
             // Reset dropdown to unselected state
             this.#dropdown.setValue('');
 
@@ -428,7 +430,9 @@ export class Modal {
         }
         confirmButton.type = 'button';
         confirmButton.innerText = confirmButtonLabel.trim().length > 0 ? confirmButtonLabel.trim() : 'Confirmar';
-        confirmButton.onclick = () => {
+        confirmButton.onclick = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
             // Get the selected dropdown value
             const selectedContext = this.#dropdown.getValue();
 

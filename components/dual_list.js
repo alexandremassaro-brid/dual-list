@@ -126,7 +126,11 @@ export class DualList {
         buttons.forEach(button => {
             const btn = document.createElement('button');
             button.classes.forEach(cls => btn.classList.add(cls));
-            btn.onclick = button.action;
+            btn.onclick = (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                button.action();
+            };
 
             const icon = document.createElement('span');
             button.icon.forEach(cls => icon.classList.add(cls));
