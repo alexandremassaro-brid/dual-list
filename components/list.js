@@ -264,8 +264,9 @@ export class List {
         };
 
         // Step 1: Add Previous button (if required)
-        if (this.#alwaysShowNavButtons) {
-            const isPrevDisabled = this.#currentPage === 1;
+        const isPrevDisabled = this.#currentPage === 1;
+        const shouldShowPrev = this.#alwaysShowNavButtons || !isPrevDisabled;
+        if (shouldShowPrev) {
             addNavButton(true, isPrevDisabled);
         }
 
@@ -289,8 +290,11 @@ export class List {
         let remainingSlots = this.#maxPageButtons;
 
         // Subtract required navigation buttons
+        if (shouldShowPrev) {
+            remainingSlots -= 1; // Previous
+        }
         if (this.#alwaysShowNavButtons) {
-            remainingSlots -= 2; // Previous and Next
+            remainingSlots -= 1; // Next
         }
 
         // Subtract page buttons already added
@@ -328,8 +332,9 @@ export class List {
         }
 
         // Step 4: Add Next button (if required)
-        if (this.#alwaysShowNavButtons) {
-            const isNextDisabled = this.#currentPage === totalPages;
+        const isNextDisabled = this.#currentPage === totalPages;
+        const shouldShowNext = this.#alwaysShowNavButtons || !isNextDisabled;
+        if (shouldShowNext) {
             addNavButton(false, isNextDisabled);
         }
 
