@@ -35,7 +35,6 @@ class ListItem {
 
         listItem.onclick = () => {
             listItem.classList.toggle('active');
-            console.log(this.selected);
         };
 
         this.#htmlElement = listItem;

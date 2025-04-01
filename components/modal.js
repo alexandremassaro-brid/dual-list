@@ -94,8 +94,8 @@ export class Modal {
      * @param {number} [options.itemsPerPage=5] - Number of items per page
      * @param {string} [options.cancelButtonLabel='Cancelar'] - Text for the cancel button
      * @param {string} [options.confirmButtonLabel='Confirmar'] - Text for the confirm button
-     * @param {Function} [options.onCancel=() => console.log('Cancelar')] - Callback for cancel button click
-     * @param {Function} [options.onConfirm=() => console.log('Confirmar')] - Callback for confirm button click
+     * @param {Function} [options.onCancel=() => console.log(False)] - Callback for cancel button click
+     * @param {Function} [options.onConfirm=() => console.log(True)] - Callback for confirm button click
      * @param {Function} [options.onTransfer=null] - Callback when items are transferred
      * @param {Object} [options.paginationOptions={}] - Pagination customization options
      * @example
@@ -406,7 +406,16 @@ export class Modal {
         cancelButton.type = 'button';
         cancelButton.innerText = cancelButtonLabel.trim().length > 0 ? cancelButtonLabel.trim() : 'Cancelar';
         cancelButton.setAttribute('data-dismiss', 'modal');
-        cancelButton.onclick = cancelAction;
+        cancelButton.onclick = () => {
+            // Reset dropdown to unselected state
+            this.#dropdown.setValue('');
+
+            // Move all items back to source list
+            this.#dualList.moveAllToSource();
+
+            // Call the original cancel action
+            cancelAction();
+        };
 
         // Confirm Button
         const confirmRequiredClasses = [
@@ -419,7 +428,16 @@ export class Modal {
         }
         confirmButton.type = 'button';
         confirmButton.innerText = confirmButtonLabel.trim().length > 0 ? confirmButtonLabel.trim() : 'Confirmar';
-        confirmButton.onclick = confirmAction;
+        confirmButton.onclick = () => {
+            // Get the selected dropdown value
+            const selectedContext = this.#dropdown.getValue();
+
+            // Get all items from the destination list
+            const selectedItems = this.#dualList.getDestinationItems();
+
+            // Call the confirm action with the selected context and items
+            confirmAction(selectedItems, selectedContext);
+        };
 
         // Append elements to footer
         footer.appendChild(cancelButton);

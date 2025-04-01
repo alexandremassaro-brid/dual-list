@@ -276,4 +276,45 @@ export class DualList {
     render() {
         return this.#htmlElement;
     }
+
+    /**
+     * Moves all items from destination list back to source list.
+     * @public
+     */
+    moveAllToSource() {
+        const sourceList = this.#sourceListHtmlElement.querySelector('.list-group');
+        const destinationList = this.#destinationListHtmlElement.querySelector('.list-group');
+        const items = Array.from(destinationList.children);
+
+        items.forEach(item => {
+            item.classList.remove('active');
+            sourceList.appendChild(item);
+        });
+
+        // Update pagination for both lists
+        this.#sourceListHtmlElement.querySelector('.panel').__list.update();
+        this.#destinationListHtmlElement.querySelector('.panel').__list.update();
+    }
+
+    /**
+     * Gets all items from the destination list.
+     * @public
+     * @returns {Array} Array of items with id and caption
+     */
+    getDestinationItems() {
+        const destinationList = this.#destinationListHtmlElement.querySelector('.list-group');
+        return Array.from(destinationList.children).map(item => ({
+            id: item.dataset.id,
+            caption: item.textContent
+        }));
+    }
+
+    /**
+     * Updates both lists' pagination and visibility.
+     * @public
+     */
+    update() {
+        this.#sourceListHtmlElement.querySelector('.panel').__list.update();
+        this.#destinationListHtmlElement.querySelector('.panel').__list.update();
+    }
 }
