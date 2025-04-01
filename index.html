@@ -70,6 +70,12 @@
             { id: '5114', caption: 'CANASSA' }
         ];
 
+        const paginationOptions = {
+            maxPageButtons: 6,              // Número máximo de botões de página
+            alwaysShowNavButtons: true,     // Sempre mostrar botões de navegação (anterior/próximo)
+            alwaysShowEdgeButtons: false     // Sempre mostrar botões de extremidade (primeira/última página)
+        };
+
         // Criar instância do modal com todas as customizações
         const modal = new Modal({
             id: 'congelamentoModal',
@@ -106,7 +112,10 @@
                 $('#congelamentoModal').modal('hide');
             },
             onCancel: () => { console.log('Modal cancelado'); },
+            paginationOptions: paginationOptions
         });
+
+
 
         // Adicionar o modal ao DOM
         document.body.appendChild(modal.render());
