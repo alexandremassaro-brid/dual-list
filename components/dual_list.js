@@ -44,20 +44,21 @@ export class DualList {
      * @param {Function} [onTransfer=null] - Callback when items are transferred
      * @param {string} [sourceTitle='Source List'] - Title for the source list
      * @param {string} [targetTitle='Destination List'] - Title for the target list
+     * @param {Object} [paginationOptions={}] - Pagination customization options
      */
-    constructor(id = 'dualList', sourceItems = [], targetItems = [], itemsPerPage = 5, onTransfer = null, sourceTitle = 'Source List', targetTitle = 'Destination List') {
+    constructor(id = 'dualList', sourceItems = [], targetItems = [], itemsPerPage = 5, onTransfer = null, sourceTitle = 'Source List', targetTitle = 'Destination List', paginationOptions = {}) {
         // Dual list Row div
         const dualList = document.createElement('div');
         dualList.classList.add('row');
 
         // Source list
-        this.#initializeSourceList(id + 'Source', sourceItems, itemsPerPage, sourceTitle);
+        this.#initializeSourceList(id + 'Source', sourceItems, itemsPerPage, sourceTitle, paginationOptions);
 
         // Action Button
         this.#initializeActionButtons(id + 'Actions', onTransfer);
 
         // Destination List
-        this.#initializeDestinationList(id + 'Destination', targetItems, itemsPerPage, targetTitle);
+        this.#initializeDestinationList(id + 'Destination', targetItems, itemsPerPage, targetTitle, paginationOptions);
 
         // Append elements to the DualList
         dualList.appendChild(this.#sourceListHtmlElement);
@@ -74,9 +75,10 @@ export class DualList {
      * @param {Array} items - Initial items for the source list
      * @param {number} itemsPerPage - Number of items per page
      * @param {string} title - Title for the source list
+     * @param {Object} paginationOptions - Pagination customization options
      */
-    #initializeSourceList(id, items, itemsPerPage, title) {
-        const list = new List(id, title, itemsPerPage);
+    #initializeSourceList(id, items, itemsPerPage, title, paginationOptions) {
+        const list = new List(id, title, itemsPerPage, paginationOptions);
 
         items.forEach(item => {
             list.addItem(item.id, item.caption);
@@ -145,9 +147,10 @@ export class DualList {
      * @param {Array} items - Initial items for the destination list
      * @param {number} itemsPerPage - Number of items per page
      * @param {string} title - Title for the destination list
+     * @param {Object} paginationOptions - Pagination customization options
      */
-    #initializeDestinationList(id, items, itemsPerPage, title) {
-        const list = new List(id, title, itemsPerPage);
+    #initializeDestinationList(id, items, itemsPerPage, title, paginationOptions) {
+        const list = new List(id, title, itemsPerPage, paginationOptions);
 
         items.forEach(item => {
             list.addItem(item.id, item.caption);

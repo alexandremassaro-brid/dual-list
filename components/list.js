@@ -100,14 +100,42 @@ export class List {
     #filterText = '';
 
     /**
+     * Maximum number of page buttons to show.
+     * @private
+     * @type {number}
+     */
+    #maxPageButtons = 6;
+
+    /**
+     * Whether to always show previous/next buttons.
+     * @private
+     * @type {boolean}
+     */
+    #alwaysShowNavButtons = true;
+
+    /**
+     * Whether to always show first/last page buttons.
+     * @private
+     * @type {boolean}
+     */
+    #alwaysShowEdgeButtons = true;
+
+    /**
      * Creates a new List instance.
      * @constructor
      * @param {string} [id='List'] - The unique identifier for the list
      * @param {string} [title='List'] - The title text for the list panel
      * @param {number} [itemsPerPage=5] - Number of items to display per page
+     * @param {Object} [paginationOptions={}] - Pagination customization options
+     * @param {number} [paginationOptions.maxPageButtons=6] - Maximum number of page buttons to show
+     * @param {boolean} [paginationOptions.alwaysShowNavButtons=true] - Whether to always show previous/next buttons
+     * @param {boolean} [paginationOptions.alwaysShowEdgeButtons=true] - Whether to always show first/last page buttons
      */
-    constructor(id = 'List', title = 'List', itemsPerPage = 5) {
+    constructor(id = 'List', title = 'List', itemsPerPage = 5, paginationOptions = {}) {
         this.#itemsPerPage = itemsPerPage;
+        this.#maxPageButtons = paginationOptions.maxPageButtons ?? 6;
+        this.#alwaysShowNavButtons = paginationOptions.alwaysShowNavButtons ?? true;
+        this.#alwaysShowEdgeButtons = paginationOptions.alwaysShowEdgeButtons ?? true;
 
         // Create main container
         const list = document.createElement('div');
@@ -122,7 +150,7 @@ export class List {
         heading.classList.add('panel-heading');
 
         // Create panel title
-        const titleH3 = document.createElement('h3');
+        const titleH3 = document.createElement('h4');
         titleH3.classList.add('panel-title');
         titleH3.innerText = title;
 
@@ -134,7 +162,7 @@ export class List {
 
         // Create footer for pagination
         const footer = document.createElement('div');
-        footer.classList.add('panel-footer', 'p-0', 'm-0', 'small');
+        footer.classList.add('panel-footer', 'small');
         footer.id = id + 'Pagination';
         this.#paginationElement = footer;
 
@@ -176,71 +204,135 @@ export class List {
         const totalPages = this.#getTotalPages();
         this.#paginationElement.innerHTML = '';
 
+        // If no pages, don't show pagination
+        if (totalPages <= 0) {
+            return;
+        }
+
         const pagination = document.createElement('nav');
         pagination.setAttribute('aria-label', 'Page navigation');
-        pagination.classList.add('m-0', 'small');
+        pagination.classList.add('small');
 
         const ul = document.createElement('ul');
-        ul.classList.add('pagination', 'pagination-sm', 'm-0');
+        ul.classList.add('pagination', 'pagination-sm');
 
-        // Previous button
-        const prevLi = document.createElement('li');
-        if (this.#currentPage === 1) {
-            prevLi.classList.add('disabled');
-        }
-        const prevA = document.createElement('a');
-        prevA.href = '#';
-        prevA.setAttribute('aria-label', 'Previous');
-        prevA.innerHTML = '<span aria-hidden="true">&laquo;</span>';
-        prevA.onclick = (e) => {
-            e.preventDefault();
-            if (this.#currentPage > 1) {
-                this.#currentPage--;
-                this.#updateItemsVisibility();
-                this.#updatePagination();
-            }
-        };
-        prevLi.appendChild(prevA);
-        ul.appendChild(prevLi);
-
-        // Page numbers
-        for (let i = 1; i <= totalPages; i++) {
+        // Helper function to add a page button
+        const addPageButton = (pageNum, isDisabled = false) => {
             const li = document.createElement('li');
-            if (i === this.#currentPage) {
+            if (pageNum === this.#currentPage) {
                 li.classList.add('active');
+            }
+            if (isDisabled) {
+                li.classList.add('disabled');
             }
             const a = document.createElement('a');
             a.href = '#';
-            a.textContent = i;
+            a.textContent = pageNum;
             a.onclick = (e) => {
                 e.preventDefault();
-                this.#currentPage = i;
-                this.#updateItemsVisibility();
-                this.#updatePagination();
+                if (!isDisabled) {
+                    this.#currentPage = pageNum;
+                    this.#updateItemsVisibility();
+                    this.#updatePagination();
+                }
             };
             li.appendChild(a);
             ul.appendChild(li);
+            return li;
+        };
+
+        // Helper function to add a navigation button
+        const addNavButton = (isPrev, isDisabled) => {
+            const li = document.createElement('li');
+            if (isDisabled) {
+                li.classList.add('disabled');
+            }
+            const a = document.createElement('a');
+            a.href = '#';
+            a.setAttribute('aria-label', isPrev ? 'Previous' : 'Next');
+            a.innerHTML = `<span aria-hidden="true">${isPrev ? '&laquo;' : '&raquo;'}</span>`;
+            a.onclick = (e) => {
+                e.preventDefault();
+                if (!isDisabled) {
+                    this.#currentPage += isPrev ? -1 : 1;
+                    this.#updateItemsVisibility();
+                    this.#updatePagination();
+                }
+            };
+            li.appendChild(a);
+            ul.appendChild(li);
+            return li;
+        };
+
+        // Step 1: Add Previous button (if required)
+        if (this.#alwaysShowNavButtons) {
+            const isPrevDisabled = this.#currentPage === 1;
+            addNavButton(true, isPrevDisabled);
         }
 
-        // Next button
-        const nextLi = document.createElement('li');
-        if (this.#currentPage === totalPages) {
-            nextLi.classList.add('disabled');
-        }
-        const nextA = document.createElement('a');
-        nextA.href = '#';
-        nextA.setAttribute('aria-label', 'Next');
-        nextA.innerHTML = '<span aria-hidden="true">&raquo;</span>';
-        nextA.onclick = (e) => {
-            e.preventDefault();
-            if (this.#currentPage < totalPages) {
-                this.#currentPage++;
-                this.#updateItemsVisibility();
-                this.#updatePagination();
+        // Step 2: Create an array of page buttons to display
+        const pageButtons = [];
+
+        // Always include current page
+        pageButtons.push(this.#currentPage);
+
+        // Include first and last page if required
+        if (this.#alwaysShowEdgeButtons) {
+            if (this.#currentPage !== 1) {
+                pageButtons.push(1);
             }
-        };
-        nextLi.appendChild(nextA);
-        ul.appendChild(nextLi);
+            if (this.#currentPage !== totalPages) {
+                pageButtons.push(totalPages);
+            }
+        }
+
+        // Calculate remaining slots
+        let remainingSlots = this.#maxPageButtons;
+
+        // Subtract required navigation buttons
+        if (this.#alwaysShowNavButtons) {
+            remainingSlots -= 2; // Previous and Next
+        }
+
+        // Subtract page buttons already added
+        remainingSlots -= pageButtons.length;
+
+        // Add sequential pages around current page
+        if (remainingSlots > 0) {
+            // Add pages after current page
+            let after = this.#currentPage + 1;
+            while (remainingSlots > 0 && after < totalPages) {
+                if (!pageButtons.includes(after)) {
+                    pageButtons.push(after);
+                    remainingSlots--;
+                }
+                after++;
+            }
+
+            // Add pages before current page
+            let before = this.#currentPage - 1;
+            while (remainingSlots > 0 && before > 1) {
+                if (!pageButtons.includes(before)) {
+                    pageButtons.push(before);
+                    remainingSlots--;
+                }
+                before--;
+            }
+        }
+
+        // Step 3: Sort and render page buttons
+        pageButtons.sort((a, b) => a - b);
+
+        // Render page buttons
+        for (const pageNum of pageButtons) {
+            addPageButton(pageNum);
+        }
+
+        // Step 4: Add Next button (if required)
+        if (this.#alwaysShowNavButtons) {
+            const isNextDisabled = this.#currentPage === totalPages;
+            addNavButton(false, isNextDisabled);
+        }
 
         pagination.appendChild(ul);
         this.#paginationElement.appendChild(pagination);

@@ -97,6 +97,7 @@ export class Modal {
      * @param {Function} [options.onCancel=() => console.log('Cancelar')] - Callback for cancel button click
      * @param {Function} [options.onConfirm=() => console.log('Confirmar')] - Callback for confirm button click
      * @param {Function} [options.onTransfer=null] - Callback when items are transferred
+     * @param {Object} [options.paginationOptions={}] - Pagination customization options
      * @example
      * // Basic usage
      * const modal = new Modal();
@@ -167,6 +168,9 @@ export class Modal {
         if (options.onTransfer) {
             this.onTransfer = options.onTransfer;
         }
+        if (options.paginationOptions) {
+            this.paginationOptions = options.paginationOptions;
+        }
     }
 
     /**
@@ -202,7 +206,8 @@ export class Modal {
             options.itemsPerPage || 5,
             options.onTransfer || null,
             options.sourceListTitle || 'Source List',
-            options.targetListTitle || 'Target List'
+            options.targetListTitle || 'Target List',
+            options.paginationOptions || {}
         );
     }
 
@@ -438,7 +443,8 @@ export class Modal {
             itemsPerPage || 5,
             this.onTransfer,
             this.sourceListTitle || 'Source List',
-            this.targetListTitle || 'Target List'
+            this.targetListTitle || 'Target List',
+            this.paginationOptions || {}
         );
 
         // Update the dual list in the form
