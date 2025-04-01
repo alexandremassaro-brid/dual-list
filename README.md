@@ -1,26 +1,16 @@
-# Componente Dual List
+# Componente Modal
 
-Um componente JavaScript que implementa uma interface de lista dupla com recursos de filtragem e transferência entre listas de origem e destino. Construído com JavaScript puro e estilização do Bootstrap 3.3.7.
+Um componente JavaScript que implementa um modal de diálogo com recursos de filtragem, paginação e transferência de itens entre listas. Construído com JavaScript puro e estilização do Bootstrap 3.3.7.
 
 ## Funcionalidades
 
-- Funcionalidade de transferência bidirecional
-- Itens estilizados com Bootstrap 3.3.7
-- Múltiplos tipos de itens de lista:
-  - Itens de lista não ordenada
-  - Itens com link (tags anchor)
-  - Itens com botão
-- Estilos de contexto para itens:
-  - Sucesso
-  - Perigo
-  - Alerta
-  - Informação
-- Capacidade de filtragem de itens
-- Funcionalidade de seleção/desseleção
-- Gerenciamento de estado ativo e desativado
-- Set especializado para gerenciamento de itens
-- Suporte a iteração e filtragem de itens
-- Gerenciamento de estado de seleção
+- Modal de diálogo com título, corpo e rodapé
+- Dropdown para seleção de contexto
+- Campo de busca para filtrar itens
+- Lista dupla para transferência de itens
+- Paginação integrada
+- Callbacks para eventos de confirmação, cancelamento e transferência
+- Atualização dinâmica do conteúdo
 
 ## Instalação
 
@@ -29,107 +19,241 @@ Um componente JavaScript que implementa uma interface de lista dupla com recurso
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 ```
 
-2. Importe o componente:
-```javascript
-import { DualList, types, ListItem, List } from './lists.js';
+2. Inclua o jQuery para funcionalidades do Bootstrap:
+```html
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
 ```
 
-## Como Usar
-
-### Criando uma lista dupla básica
-
+3. Importe o componente Modal:
 ```javascript
-// Crie as listas de origem e destino
-const listaOrigem = new List([
-    ['1', 'Item 1'],
-    ['2', 'Item 2'],
-    ['3', 'Item 3']
-]);
-
-const listaDestino = new List();
-
-// Inicialize a lista dupla
-const listaDupla = new DualList(listaOrigem, listaDestino);
+import { Modal } from './components/modal.js';
 ```
 
-### Diferentes Tipos de Itens de Lista
+## Exemplos de Uso
+
+### Criando um Modal Básico
 
 ```javascript
-// Crie uma lista com itens linkados
-const listaComLinks = new List([], types.LINKED_ITEMS);
+// Configurar opções do dropdown
+const dropdownOptions = [
+    { id: '2023', caption: 'Ano 2023' },
+    { id: '2024', caption: 'Ano 2024' }
+];
 
-// Crie uma lista com itens de botão
-const listaComBotoes = new List([], types.BUTTON_ITEMS);
+// Configurar itens da lista de origem
+const sourceItems = [
+    { id: '1', caption: 'Item 1' },
+    { id: '2', caption: 'Item 2' },
+    { id: '3', caption: 'Item 3' }
+];
+
+// Criar instância do modal com configurações básicas
+const modal = new Modal({
+    id: 'selecaoModal',
+    title: 'Seleção de Itens',
+    dropdownDescription: 'Selecione um período',
+    dropdownOptions: dropdownOptions,
+    searchPlaceholder: 'Filtrar itens...',
+    sourceListTitle: 'Itens disponíveis',
+    targetListTitle: 'Itens selecionados',
+    sourceItems: sourceItems,
+    targetItems: [],
+    itemsPerPage: 5,
+    cancelButtonLabel: 'Cancelar',
+    confirmButtonLabel: 'Confirmar',
+    onCancel: () => console.log('Operação cancelada'),
+    onConfirm: (selectedItems, selectedContext) => {
+        // Validações
+        if (!selectedContext) {
+            alert('Por favor, selecione um período');
+            return;
+        }
+
+        if (selectedItems.length === 0) {
+            alert('Por favor, selecione pelo menos um item');
+            return;
+        }
+
+        // Processar os dados selecionados
+        console.log('Período selecionado:', selectedContext);
+        console.log('Itens selecionados:', selectedItems);
+
+        // Fechar o modal após processamento
+        $('#selecaoModal').modal('hide');
+    }
+});
+
+// Adicionar o modal ao DOM
+document.body.appendChild(modal.render());
+
+// Abrir o modal (requer Bootstrap JS)
+$('#selecaoModal').modal('show');
 ```
 
-### Criando Itens Individuais
+### Configurando Callbacks para Eventos de Transferência
 
 ```javascript
-// Criar um item com contexto
-const item = new ListItem('1', 'Item 1', ListItem.contexts.SUCCESS);
+// Função de callback para eventos de transferência
+const onTransfer = (transferType) => {
+    console.log(`Tipo de transferência: ${transferType}`);
 
-// Habilitar/Desabilitar item
-item.disable();
-item.enable();
-item.toggleDisabled();
+    // Possíveis valores de transferType:
+    // 'allToDestination' - Todos os itens movidos para o destino
+    // 'selectedToDestination' - Itens selecionados movidos para o destino
+    // 'selectedToSource' - Itens selecionados movidos para a origem
+    // 'allToSource' - Todos os itens movidos para a origem
+};
 
-// Selecionar/Desselecionar item
-item.select();
-item.deselect();
-item.toggleSelected();
+// Criar instância do modal com callback de transferência
+const modal = new Modal({
+    id: 'selecaoModal',
+    title: 'Seleção de Itens',
+    dropdownDescription: 'Selecione um período',
+    dropdownOptions: dropdownOptions,
+    searchPlaceholder: 'Filtrar itens...',
+    sourceListTitle: 'Itens disponíveis',
+    targetListTitle: 'Itens selecionados',
+    sourceItems: sourceItems,
+    targetItems: [],
+    itemsPerPage: 5,
+    cancelButtonLabel: 'Cancelar',
+    confirmButtonLabel: 'Confirmar',
+    onCancel: () => console.log('Operação cancelada'),
+    onConfirm: (selectedItems, selectedContext) => {
+        // Validações
+        if (!selectedContext) {
+            alert('Por favor, selecione um período');
+            return;
+        }
+
+        if (selectedItems.length === 0) {
+            alert('Por favor, selecione pelo menos um item');
+            return;
+        }
+
+        // Processar os dados selecionados
+        console.log('Período selecionado:', selectedContext);
+        console.log('Itens selecionados:', selectedItems);
+
+        // Fechar o modal após processamento
+        $('#selecaoModal').modal('hide');
+    },
+    onTransfer: onTransfer
+});
 ```
 
-### Filtrando Itens
+### Filtragem de Itens
+
+O modal possui funcionalidade integrada de filtragem que pode ser usada para pesquisar itens nas listas.
 
 ```javascript
-// Filtrar itens da lista de origem
-const itensFiltrados = listaDupla.filterSourceList('termo de busca');
+// Filtrar itens nas listas
+modal.filter('termo de busca');
 
-// Filtrar itens da lista de destino
-const itensDestinoFiltrados = listaDupla.filterTargetList('termo de busca');
+// Exemplo: conectar um campo de texto para filtragem
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', (event) => {
+    modal.filter(event.target.value.toLowerCase());
+});
 ```
 
-### Movendo Itens Entre Listas
+### Customização da Paginação
+
+O modal permite customização avançada da paginação através do parâmetro `paginationOptions`.
 
 ```javascript
-// Mover item da origem para o destino
-listaDupla.moveFromSourceToTarget(item);
+// Configurações avançadas de paginação
+const paginationOptions = {
+    maxPageButtons: 4,              // Número máximo de botões de página
+    alwaysShowNavButtons: true,     // Sempre mostrar botões de navegação (anterior/próximo)
+    alwaysShowEdgeButtons: true     // Sempre mostrar botões de extremidade (primeira/última página)
+};
 
-// Mover item do destino para a origem
-listaDupla.moveFromTargetToSource(item);
+// Criar instância do modal com opções de paginação personalizadas
+const modal = new Modal({
+    id: 'selecaoModal',
+    title: 'Seleção de Itens',
+    dropdownDescription: 'Selecione um período',
+    dropdownOptions: dropdownOptions,
+    searchPlaceholder: 'Filtrar itens...',
+    sourceListTitle: 'Itens disponíveis',
+    targetListTitle: 'Itens selecionados',
+    sourceItems: sourceItems,
+    targetItems: [],
+    itemsPerPage: 10,
+    cancelButtonLabel: 'Cancelar',
+    confirmButtonLabel: 'Confirmar',
+    onCancel: () => console.log('Operação cancelada'),
+    onConfirm: (selectedItems, selectedContext) => {
+        // Validações
+        if (!selectedContext) {
+            alert('Por favor, selecione um período');
+            return;
+        }
 
-// Limpar listas
-listaDupla.clearSourceList();
-listaDupla.clearTargetList();
-listaDupla.clearLists();
+        if (selectedItems.length === 0) {
+            alert('Por favor, selecione pelo menos um item');
+            return;
+        }
+
+        // Processar os dados selecionados
+        console.log('Período selecionado:', selectedContext);
+        console.log('Itens selecionados:', selectedItems);
+
+        // Fechar o modal após processamento
+        $('#selecaoModal').modal('hide');
+    },
+    paginationOptions: paginationOptions
+});
+```
+
+### Atualizando Dinamicamente o Conteúdo do Modal
+
+É possível atualizar dinamicamente o conteúdo do modal após sua criação.
+
+```javascript
+// Atualizar as listas do modal
+const novosItensOrigem = [
+    { id: '4', caption: 'Item 4' },
+    { id: '5', caption: 'Item 5' }
+];
+
+const novosItensDestino = [
+    { id: '1', caption: 'Item 1' },
+    { id: '2', caption: 'Item 2' }
+];
+
+// Atualizar dual list dentro do modal
+modal.updateDualList(novosItensOrigem, novosItensDestino, 8);
 ```
 
 ## Referência da API
 
-### Classes
+### Classe Modal
 
-- `DualList`: Classe principal do componente
-- `List`: Contêiner de lista única
-- `ListItem`: Item individual da lista
-- `ListItemSet`: Set especializado para gerenciar ListItems
+- `Modal`: Classe principal do componente modal
 
-### Tipos de Item
+### Opções do Modal
 
-```javascript
-types.UNORDERED    // Itens de lista regular
-types.LINKED_ITEMS // Itens com link
-types.BUTTON_ITEMS // Itens com botão
-```
-
-### Contextos de Item
-
-```javascript
-ListItem.contexts.NONE    // Estilo padrão
-ListItem.contexts.SUCCESS // Estilo de sucesso
-ListItem.contexts.DANGER  // Estilo de perigo
-ListItem.contexts.WARNING // Estilo de alerta
-ListItem.contexts.INFO    // Estilo de informação
-```
+| Opção | Tipo | Padrão | Descrição |
+|-------|------|--------|-----------|
+| `id` | string | 'dialogModal' | ID do elemento modal |
+| `title` | string | 'Dialog Modal' | Título do modal |
+| `dropdownDescription` | string | 'Selecione uma opção' | Texto descritivo do dropdown |
+| `dropdownOptions` | array | [] | Opções disponíveis no dropdown |
+| `searchPlaceholder` | string | 'Buscar...' | Placeholder do campo de busca |
+| `sourceListTitle` | string | 'Source List' | Título da lista de origem |
+| `targetListTitle` | string | 'Target List' | Título da lista de destino |
+| `sourceItems` | array | [] | Itens iniciais da lista de origem |
+| `targetItems` | array | [] | Itens iniciais da lista de destino |
+| `itemsPerPage` | number | 5 | Itens por página nas listas |
+| `cancelButtonLabel` | string | 'Cancelar' | Texto do botão cancelar |
+| `confirmButtonLabel` | string | 'Confirmar' | Texto do botão confirmar |
+| `onCancel` | function | - | Callback quando cancelar é clicado |
+| `onConfirm` | function | - | Callback quando confirmar é clicado |
+| `onTransfer` | function | - | Callback quando itens são transferidos |
+| `paginationOptions` | object | {} | Opções de paginação |
 
 ## Suporte a Navegadores
 
@@ -142,7 +266,7 @@ Suporta todos os navegadores compatíveis com Bootstrap 3.3.7.
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dual List Example</title>
+    <title>Modal Example</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -152,6 +276,8 @@ Suporta todos os navegadores compatíveis com Bootstrap 3.3.7.
         </button>
     </div>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
     <script type="module">
         import { Modal } from './components/modal.js';
 
@@ -175,28 +301,7 @@ Suporta todos os navegadores compatíveis com Bootstrap 3.3.7.
             { id: '1018', caption: 'Coprossel' },
             { id: '1019', caption: 'Coperboa' },
             { id: '1040', caption: 'Camisc' },
-            { id: '1058', caption: 'Coperdia' },
-            { id: '1061', caption: 'Cooperplan' },
-            { id: '5002', caption: 'Sementes Maua' },
-            { id: '5001', caption: 'Bela Sementes' },
-            { id: '5003', caption: 'Sementes Agrosol' },
-            { id: '5004', caption: 'Sementes Costa Beber' },
-            { id: '5006', caption: 'Sementes Petrovina' },
-            { id: '5007', caption: 'SEMENTES TRIUNFO' },
-            { id: '5008', caption: 'SEMENTES TALISMA' },
-            { id: '5010', caption: 'Sementes Butiá' },
-            { id: '5011', caption: 'Sementes Giovelli' },
-            { id: '5012', caption: 'Sementes Lagoa Bonita' },
-            { id: '5013', caption: 'Cerrado de Cima' },
-            { id: '5015', caption: 'BJ SEMENTES' },
-            { id: '5016', caption: 'Sementes Valiosa' },
-            { id: '5018', caption: 'Agro Rosso' },
-            { id: '5020', caption: 'Cereal Ouro' },
-            { id: '5057', caption: 'SEMENTES ELIANE' },
-            { id: '5073', caption: 'SEMENTES TROPICAL' },
-            { id: '5082', caption: 'CALUBA SEMENTES' },
-            { id: '5107', caption: 'SEMENTES MANA' },
-            { id: '5114', caption: 'CANASSA' }
+            { id: '1058', caption: 'Coperdia' }
         ];
 
         // Criar instância do modal com todas as customizações
@@ -211,7 +316,7 @@ Suporta todos os navegadores compatíveis com Bootstrap 3.3.7.
             sourceItems: sourceItems,
             itemsPerPage: 10,
             onConfirm: (selectedItems, selectedContext) => {
-                // Exemplo de como usar os itens selecionados e o contexto
+                // Validações
                 if (!selectedContext) {
                     alert('Por favor, selecione um período');
                     return;
@@ -222,14 +327,9 @@ Suporta todos os navegadores compatíveis com Bootstrap 3.3.7.
                     return;
                 }
 
-                // Aqui você pode processar os dados selecionados
+                // Processar os dados selecionados
                 console.log('Período selecionado:', selectedContext);
                 console.log('Sementeiros selecionados:', selectedItems);
-
-                // Exemplo de como acessar os dados
-                selectedItems.forEach(item => {
-                    console.log(`Sementeiro: ${item.caption} (ID: ${item.id})`);
-                });
 
                 // Fechar o modal após processamento
                 $('#congelamentoModal').modal('hide');
@@ -243,7 +343,7 @@ Suporta todos os navegadores compatíveis com Bootstrap 3.3.7.
 </html>
 ```
 
-Este exemplo demonstra como criar uma tela completa com um modal personalizado usando o componente Dual List. O modal inclui:
+Este exemplo demonstra como criar uma tela completa com um modal personalizado usando o componente Modal. O modal inclui:
 
 - Um dropdown para seleção de período
 - Uma barra de pesquisa para filtrar sementeiros
