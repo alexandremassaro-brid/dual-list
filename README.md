@@ -211,8 +211,28 @@ Suporta todos os navegadores compatíveis com Bootstrap 3.3.7.
             sourceItems: sourceItems,
             itemsPerPage: 10,
             onConfirm: (selectedItems, selectedContext) => {
-                console.log('Itens selecionados:', selectedItems);
+                // Exemplo de como usar os itens selecionados e o contexto
+                if (!selectedContext) {
+                    alert('Por favor, selecione um período');
+                    return;
+                }
+
+                if (selectedItems.length === 0) {
+                    alert('Por favor, selecione pelo menos um sementeiro');
+                    return;
+                }
+
+                // Aqui você pode processar os dados selecionados
                 console.log('Período selecionado:', selectedContext);
+                console.log('Sementeiros selecionados:', selectedItems);
+
+                // Exemplo de como acessar os dados
+                selectedItems.forEach(item => {
+                    console.log(`Sementeiro: ${item.caption} (ID: ${item.id})`);
+                });
+
+                // Fechar o modal após processamento
+                $('#congelamentoModal').modal('hide');
             }
         });
 
